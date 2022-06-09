@@ -1,0 +1,198 @@
+\section{Deliberative agent (7 min)}
+
+\begin{frame}{Agent definition}
+    \center An entity capable of :
+    \pause
+    \begin{enumerate}
+        \item Perceiving its environment
+        \pause
+        \item Modifying its environment (actions)
+        \pause
+        \item \textbf{Reasoning about its knowledge}
+    \end{enumerate}
+
+    \centering
+    \begin{tikzpicture}[thick,scale=0.8, every node/.style={scale=0.8}]
+    \node[draw = black, very thick,
+        minimum width = 12em,
+        minimum height = 5em,
+        rounded corners,
+        text = black,
+        align=center,] (F) at (0,0) {\textbf{Reasoning}\\ Knowledge};
+        
+    \pause
+    \node[above=1em of F, xshift = -12em] (t1) {\Large\textbf{Inputs}};
+    \node[above=1em of F, xshift = 12em] (t2) {\Large \textbf{Outputs}};
+    \pause
+    \node[yshift = 1.5em, xshift = -12em] (t3) {\textbf{Perception datas}};
+    \node[yshift = -1.5em, xshift = -12em] (t4) {\textbf{Objectives}};
+    \draw[-latex, ultra thick] (-6,0)--(F.west);
+    \pause
+    \node[xshift = 15em] (t5) {\textbf{Actions}};
+    \draw[-latex, ultra thick] (F.east) -- (t5);
+    \end{tikzpicture}  
+\end{frame}
+
+\begin{frame}{Skills domain}
+    \begin{center}
+        \large
+        Acting domain \textbf{$A_\Delta (A, T, M_t)$}:
+        
+        hierarchical operational models
+    \end{center}
+\begin{columns}
+    \begin{column}{0.65\textwidth}
+        
+     \begin{itemize}
+         \item[$A$] \textit{(low level capabilities)}: primitive tasks
+         \pause
+         
+         \textit{\footnotesize(move, grasp, look)}
+         \pause
+         \item[$T$] \textit{(high-level capabilities)}: abstract tasks
+         \pause
+
+         \textit{\footnotesize(set the table, prepare a coffee)}
+         \pause
+         \item[$M_t$] \textit{(Operational models)}: methods
+         ("know how")
+         \footnotesize
+
+         \textbf{Executable program: } General purpose language, common programming constructs
+     \end{itemize}
+    \end{column}
+    \begin{column}{0.45\textwidth}
+        \begin{figure}
+            \begin{tikzpicture}
+                \node[draw, rounded corners, ultra thick] (t) {$t_{move}$} [sibling distance = 2.5cm]
+                  child {node[draw, ultra thick] (m1) {$m_{noop}$} edge from parent [dashed]} 
+                  child {node[draw, ultra thick] (m2) {$m_{recursive}$} edge from parent [dashed]
+                  child {node[draw, circle, solid, ultra thick] (a1) {move} edge from parent [solid]}
+                  child {node[draw, rounded corners, solid, ultra thick] {$t_{move}$} edge from parent [solid]}};
+                \node[right = 0em of t] {$\in T$};
+                \node[right = 0em of m1] {$\in M_t$};
+                \node[right = 0em of m2] {$\in M_t$};
+                \node[right = 0em of a1] {$\in A$};
+
+            \end{tikzpicture}
+            \caption{Example of hierarchy for the \textit{task} $t_{move}$}
+
+            
+        \end{figure}
+    \end{column}
+\end{columns}
+    
+\end{frame}
+\begin{frame}{Refinement Acting Engine (RAE) : Algorithms to handle acting domains and make choices}
+\begin{columns}
+    \begin{column}{0.35\textwidth}
+    \pause
+    \setlength{\leftmargini}{-1pt}
+    %\setlength{\parsep}{1pt}
+    %\setlength{\parskip}{0pt}
+    \begin{itemize}
+        \item Performs multiple tasks in parallel
+        \pause
+        \item RAE decision points:
+        \begin{itemize}
+            %\setlength{\leftmargini}{-1cm}
+            \pause
+            \item \textbf{Refinement:}
+            
+            $task \rightarrow  method \in M_t$.
+            \pause
+            \item \textbf{Instantiating:}
+            
+            $parameter \rightarrow value \in D_p$
+        \end{itemize}
+    \end{itemize}
+    \end{column}
+    \begin{column}{0.65\textwidth}
+        \begin{itemize}
+            \setlength{\leftmargini}{-1pt}
+            \item \textbf{Main:} 
+            \begin{itemize}
+                \item Receive:  $\tau$ (task or event);
+                add it the \textbf{agenda} ({ongoing tasks})
+                \pause
+                \item Refine: $tau$ using \textbf{Select.}
+                \pause
+                \item Progress: $tau \in$ agenda
+            \end{itemize}
+            \pause
+            \item Select: $\tau \rightarrow m_s$
+            
+            $ m_s \in \{m \in M_t, applicable(m)\}$
+            \pause
+            \item \textbf{Progress:}
+                \begin{itemize}
+                \item Refine subtasks $\tau_i$ in $m_s$.    
+                \item Monitor execution of $\tau_i$.
+                \item \textbf{Retry} the $\tau$ in case of \emph{failure}.
+                \end{itemize}
+                \pause
+            
+            \item \textbf{Retry:} call Select to get a new method; progress the new method.
+        \end{itemize}
+    \end{column}
+\end{columns}
+
+    
+\end{frame}
+\begin{frame}{Using planning to guide the refinement}
+    Make a high-level choice based on future choices the agent will have to make and its own capabilities to modify its environment.
+    Requirements:
+    \begin{itemize}
+        \item a Model
+        \item \dots
+    \end{itemize}
+    Problems: 
+    \begin{itemize}
+        \item 
+    \end{itemize}
+    Proposed solution:
+    \begin{itemize}
+        \item 
+    \end{itemize}
+\end{frame}
+\begin{frame}{Improve Select with planning}
+    \begin{center}
+        
+    Role:
+    
+    $Select(\tau, p_1,\dots,p_n) \rightarrow \{m, p_1, \dots, p_n,\dots,p_m\}$
+
+    \end{center}
+
+    Techniques:
+    \begin{itemize}
+
+    \item \textbf{Greedy (Basic RAE functioning):} $\rightarrow m_s \in applicable(m)$
+    \pause
+    
+    \underline{Problem:} Does not take into account future refinements (can lead into dead-locks)
+    \pause
+    
+    \item \textbf{Heuristic:} sort with heuristic function
+    \pause
+    
+    \underline{Propositions: } Learn$\pi$ and Learn$\pi_i$
+    \pause
+    
+    \underline{Problem :} Gives better quality choices but does not ensures dead-lock free choices
+    \pause
+    \item \textbf<5->{Use look-ahead techniques} : capacity to project the system from the current state to possible future state
+
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Extract a planning domain from acting domain}
+    Use a Lisp language:
+    \begin{itemize}
+        \item Turing complet
+        \item primitives d'acting
+        \item immutable
+        \item functional
+        \item pure
+    \end{itemize}
+\end{frame}

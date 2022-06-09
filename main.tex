@@ -1,0 +1,68 @@
+%\documentclass[french]{beamer}
+\documentclass[handout, t, english]{beamer}
+\usetheme{Frankfurt}
+\usepackage[utf8]{inputenc}
+\usepackage{natbib}
+%\usepackage[french]{babel}
+\usepackage[english]{babel}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage{pgfplots}
+\usepackage{comment}
+
+%customize itemize
+\usetikzlibrary{positioning,calc,intersections}
+
+\setbeamertemplate{footline}[frame number]
+
+
+%New commands for the SSA form
+\newcommand{\ssa}[1]{\begin{align*}#1\end{align*}}
+\newcommand{\cst}{\textit{cst}}
+\newcommand{\readstate}{\textit{read-state}}
+\newcommand{\setstate}{\textit{set-state}}
+\newcommand{\exectask}{\textit{exec-task}}
+\newcommand{\apply}{\textit{apply}}
+
+
+\title{ICAPS - IntEx 2022}
+\subtitle{Guidance of a Refinement-based Acting Engine with a Hierarchical Temporal Planner}
+\author{Jérémy Turi, Arthur Bit-Monnot \\
+jeremy.turi@laas.fr, abitmonnot@laas.fr}
+\institute{LAAS-CNRS}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}
+\frametitle{Outline}
+\tableofcontents
+\end{frame}
+
+\AtBeginSection[]
+{
+  \begin{frame}
+    \frametitle{Table of Contents}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+\begin{frame}{Goal of the presentation}
+  The goal of the presentation is to present an agent with autonomous deliberation capabilities, able to make wise decisions thanks to look-ahead techniques.
+\end{frame}
+
+
+
+\input{sections/deliberation}
+\input{sections/ompas}
+\input{sections/selectplan.tex}
+\input{sections/conclusion}
+
+\end{document}
