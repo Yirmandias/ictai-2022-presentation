@@ -1,28 +1,359 @@
-\section{RAE+Planning (6min)}
-\begin{frame}
-    Goal: Improve high-level choices quality taking into account future choices and primitives tasks models.
-\end{frame}
-\begin{frame}{Select-Plan}
-    
-\end{frame}
-\begin{frame}{Extraction of the planning domain}
-    
-\end{frame}
-\begin{frame}{Enhancement of the chronicles with post-processing}
-    
-\end{frame}
-\begin{frame}{Primitive task models}
-    
-\end{frame}
-\begin{frame}{Validation of the technique: gripper-door}
+\section{RAE+SelectPlan (6min)}
+\begin{frame}{Improve high-level choices by anticipating RAE behavior}
+
+    Improve Select $\rightarrow$ method selection based on:
     \begin{itemize}
-        \item Global view on the problem
-        \item Acting domain
+        \item applicability $\rightarrow$ pre-conditions($\xi$)
+        \item future choices \textbf{(instantiating, refinement)}
+        
+        $\rightarrow$ embedded in operational models
+        \item primitives tasks outcome $\rightarrow$ platform model
     \end{itemize}
+
+\end{frame}
+\begin{frame}[fragile]{Improving RAE method selection with the call of a planner}
+    \begin{columns}[c]
+        \begin{column}{0.4\textwidth}
+            \begin{algorithm}[H]
+                \begin{algorithmic}
+                    \scriptsize
+                    \Function{Select}{$\tau$}
+                    \State $m \gets \varnothing$
+                    \State $\xi$ $\gets$ \Call{Get-State}{}
+                    \State $M$ $\gets$ \Call{Applicable}{$\tau$, $\xi$} $\setminus$ \Call{Tried}{$\tau$}
+                    
+                    \State \Return \textbf{arbitrary} $m \in M$ \label{line:return-failure}
+                    
+                    \EndFunction
+              
+                \end{algorithmic}
+                \caption{Greedy select for a task $\tau$.}
+                \label{alg:plan}
+              \end{algorithm}
+        \end{column}
+        \begin{column}[c]{0.1\textwidth}
+            \centering
+            $\rightarrow$
+        \end{column}
+        
+        \begin{column}{0.5\textwidth}
+            
+            \begin{algorithm}[H]
+                \begin{algorithmic}
+                    \scriptsize
+                    \Function{PlanSelectMethod}{$\tau$}
+                    \State $m \gets \varnothing$
+                    \State $\xi$ $\gets$ \Call{Get-State}{}
+                    \State $M$ $\gets$ \Call{Applicable}{$\tau$, $\xi$} $\setminus$ \Call{Tried}{$\tau$}
+                    \State $\pi$ $\gets$ \Call{Get-Parent-Plan}{$\tau$} \label{line:get-parent-plan}
+                    \If{$\pi = \varnothing$\textbf{ or not } \Call{Is-Valid}{$\pi$}} \label{line:check-valid}
+                      \State $\pi \gets$ \Call{Call-Planner}{$\tau$, $\xi$} \label{line:call-planner}
+                      
+                    \EndIf
+                    \State $m$ $\gets$ \Call{Get-Method-From-Plan}{$\pi$, $\tau$} \label{line:get-method}
+                    \If{$m \neq \varnothing \land m \in M$} 
+                      \State \Return $m$ \label{line:return-success}
+                    \Else
+                      \State \Return \textbf{arbitrary} $m \in M$ \label{line:return-failure}
+                    \EndIf
+                    \EndFunction
+              
+                \end{algorithmic}
+                \caption{Plan-based method selection for a task $\tau$.}
+                \label{alg:plan}
+              \end{algorithm}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Input and output of the planner}
+    \centering
+        \begin{tikzpicture}[thick,scale=0.8, every node/.style={scale=0.8}]
+        \node[draw = black, very thick,
+            text centered,
+            minimum width = 12em,
+            minimum height = 5em,
+            rounded corners,
+            text = black,
+            align=center] (F) at (0,0) {\textbf{Planner}\\$P_\Delta$};
+        \node[above=1em of F, xshift = -12em] (t1) {\Large\textbf{Inputs}};
+        \node[above=1em of F, xshift = 12em] (t2) {\Large \textbf{Outputs}};
+        \node[yshift = 1.5em, xshift = -12em] (t3) {\textbf{State}};
+        \node[yshift = -1.5em, xshift = -12em] (t4) {\textbf{Task}};
+        \draw[-latex, ultra thick] (-6,0)--(F.west);
+        \node[xshift = 15em] (t5) {\textbf{Plan}};
+        \draw[-latex, ultra thick] (F.east) -- (t5);
+    \end{tikzpicture}
+    ~
+    
+    Returned plan:
+    \begin{itemize}
+        \item Instantiated method for each task
+        \item Tasks ordering
+    \end{itemize}
+    
+    ~
+    
+    \textbf{Select :} extract method instance from the plan
+    \end{frame}
+
+\begin{frame}{Extraction of the planning domain}
+    \begin{tikzpicture}
+    
+        \node[draw = black, very thick,
+              minimum width = 8em,
+              minimum height = 3em,
+              rounded corners,
+              text = black,
+              text centered,
+              align = center,
+              ] (ext) at (0,0) {\textbf{Extraction}};
+        \node[align = center, left=3em of ext] (acting) {$A_\Delta$\\
+        \scriptsize\{Tasks,
+        \\\scriptsize methods,
+        \\\scriptsize state-function, \dots\}};
+        \node[align = center, right = 3em of ext] (planning) {$P_\Delta$ \\ \scriptsize \{Chronicle templates\}};
+        \path[->]
+          (acting) edge (ext)
+          (ext) edge (planning);
+    
+        %Extraction process
+    
+          \node[below= 6em of ext, xshift = -12em, minimum width = 6em] (sompas) {\textbf{SOMPAS}};
+          \node[below=6em of ext, minimum width = 4em] (ssa) {\textbf{SSA}};
+          \node[below=6em of ext, xshift = 12em, minimum width = 6em] (chro) {\textbf{Chronicle}};
+          \path[->]
+          (sompas) edge
+          node[above, midway] {\footnotesize \textit{SSA translation}} 
+          node[below, midway] {\footnotesize \{translation rules\}}
+          (ssa)
+    
+          (ssa) edge
+          node[above, midway, align=center] {\footnotesize \textit{chronicle extraction,}\\\footnotesize \textit{post-processing}} 
+          node[below, midway] {\footnotesize \{extraction rules\}}
+          (chro);
+    
+          \path[-] (ext.-160) edge (sompas.160);
+          \path[-] (ext.-20) edge (chro.20);
+      \end{tikzpicture}
+\end{frame}
+\lstset{basicstyle=\tiny, columns=fullflexible}
+
+
+\begin{frame}[c,fragile]{Example}
+    \small
+    Converting a task that:
+\begin{itemize}
+    \item move to the location of the ball
+    \item check the good position of robby
+    \item pick the ball
+\end{itemize}
+    \begin{columns}[c, T]
+        \begin{column}{0.32\textwidth}
+            Operational model (SOMPAS):
+            \tiny
+            \begin{lstlisting}
+(do
+ (move (at-robby) (at ?ball))
+ (check (= (at-robby) (at ?ball)))
+ (pick ?ball (at ?ball) ?gripper)))
+         \end{lstlisting} 
+        \end{column}
+
+
+        \begin{column}{0.32\textwidth}
+            SSA form
+            \tiny
+            \begin{align*}
+                & \dots \\
+        t_1 &: r_1 \leftarrow \cst(move) \\
+        t_2 &: r_2 \leftarrow \cst(\textit{at-robby}) \\
+        t_3 &: r_3 \leftarrow read\text{-}state(r_2) \\
+        t_4 &: r_4 \leftarrow \cst(at) \\
+        t_5 &: r_5 \leftarrow \cst(value(?ball)) \\
+        t_6 &: r_6 \leftarrow \readstate(r_4, r_5) \\
+        t_7 &: r_7 \leftarrow \exectask(r_1, r_3, r_6) \\ 
+            & \dots\\
+            \end{align*}
+        \end{column}
+        \begin{column}{0.32\textwidth}
+        Chronicle Template
+        
+\tiny
+\begin{align*}
+    variables: \{&s,e,?ball,?gripper,\\
+    &r_1,r_2,r_3,r_4,t_1,t_2\} \\
+    constraints : \{ &r_1 = r_2, r_3 \neq r_4, \\
+        & s \leq t_1 \leq t_2 \leq e \}\\
+    conditions : \{&[s,s]~(at\ ?ball) = r_1 \\
+        &[s,s]~(at\text{-}robby) = r_2 \\
+        &[t_2,t_2]~(at\text{-}robby) = r_3 \\
+        &[t_2,t_2]~(at\ ?ball) = r_4 \} \\
+    subtasks : \{ &[s,t_1]~(move\ r_2\ r_1) \\
+        &[t_2,e]~(pick\ ?ball\ r_4\ ?gripper)\}
+\end{align*}  
+        \end{column}
+    \end{columns}
+\end{frame}
+
+
+
+\begin{frame}[fragile]{Primitive task models}
+    \small
+    Planner input: HTN \& primitive task model
+    \begin{itemize}
+        \item Defined with SOMPAS
+        \pause
+        \item PDDL-like definition
+        \pause
+        \item \textbf{assert} $\rightarrow$ \textbf{setstate} $\rightarrow$ \textbf{effect} 
+    \end{itemize}
+    Primitive action move
+    \begin{columns}[T] % align columns
+        \begin{column}{.48\textwidth}
+            \small
+            \textbf{Operational model:}
+            \tiny
+            \begin{lstlisting}
+(def-action-model move
+ '((:params (?from room) (?to room))
+   (:pre-conditions (and-cond 
+     (= (at-robby) ?from)
+     (!= ?from ?to))
+     (= (connected ?from ?to) yes))
+   (:effects
+     (begin
+       (assert 'at-robby ?to)))))
+            \end{lstlisting}
+        \end{column}%
+        \begin{column}{.48\textwidth}
+            \small
+            \textbf{Chronicle Template:}
+            \tiny
+            \begin{align*}
+            %name :(&move\ ?from\ ?to)\\
+            %task :(&move\ ?from\ ?to)\\
+            variables: \{&?from, ?to, s, e, p, r1,r2,r3,r\}\\
+            constraints: \{&r = true, r1 = room, r2 = room\\
+                & r3 = ?from, ?from != ?to, s < e \}\\
+            condition:\{&[s,s]\ instance(?from) = r1 \\
+                &[s,s]\ instance(?to) = r2\\
+                &[s,s]\ \text{at-robby} = r3 \}\\
+            effects:\{&[e,e]\ \text{at-robby} \leftarrow ?to\} \\
+            subtasks:& \emptyset
+            \end{align*}
+        \end{column}
+    \end{columns}   
+    
+\end{frame}
+
+
+
+\begin{frame}[fragile]{Validation of the technique: gripper-door}
+    Robby needs to place balls in different rooms
+\begin{itemize}
+    \item Actions: pick, move, drop
+    \item State-functions: at-robby, at, carry, connected
+    \item Types: room, gripper, ball, new\_bool
+    \item Tasks and methods: pick-and-drop(m1, m2), t\_move(m\_recursive, m\_already\_there)
+\end{itemize}
 \end{frame}
 \begin{frame}{Results}
+  
+\pgfplotstableread{datas/gripper_doors.dat}{\table}
+\begin{columns}
+    \begin{column}{0.45\textwidth}
+        3 different Select:
+        
+        Greedy, Aries, Optimal Aries (Aries-opt)
+    \end{column}
+
+    \begin{column}{0.45\textwidth}
+        Metrics in function of the number of room:
+        \begin{itemize}
+            \item Executed actions
+            \item Total refinement time
+        \end{itemize}
+    \end{column}
+\end{columns}
+
+~
+
+%Number of actions in functions of the number of rooms
+\begin{columns}[T] % align columns
+\begin{column}{.55\textwidth}
+
+\begin{figure}[H]
+    \caption{Executed actions}
+    \begin{tikzpicture}
+        \begin{axis}[
+            legend image post style={scale=0.4},
+        legend style={ at={(0.3,0.97)},anchor=north,legend cell align=left, font = \tiny},
+            grid = both,
+            minor tick num = 1,
+            major grid style = {lightgray},
+            minor grid style = {lightgray!25},
+            width = \textwidth,
+            %legend cell align = {left},
+            %legend pos = north west
+        ]
+         
+        \addplot[blue, ultra thick] table [x = {X}, y = {GA}] {\table};
+         
+        \addplot[red, ultra thick] table [x ={X}, y = {LA}] {\table};
+        
+        \addplot[green, ultra thick] table [x ={X}, y = {LOA}] {\table};       
+        \legend{
+            Greedy, 
+            LCP,
+            Aries-opt
+        }
+        
+        
+        \end{axis}
+         
+    \end{tikzpicture}
+\end{figure}
+
+\end{column}%
+\begin{column}{.55\textwidth}
+\begin{figure}
+    \caption{Refinement time (s)}
+\begin{tikzpicture}
+    \begin{axis}[
+        legend image post style={scale=0.4},
+            legend style={at={(0.3,0.97)},anchor=north,legend cell align=left, font = \tiny},
+            grid = both,
+            minor tick num = 1,
+            major grid style = {lightgray},
+            minor grid style = {lightgray!25},
+            width = \textwidth,
+            %legend cell align = {left},
+            %legend pos = north west
+        ]
+            
+        \addplot[blue, ultra thick] table [x = {X}, y = {GT}] {\table};
+        \addlegendentry{Greedy}
+            
+        \addplot[red, ultra thick] table [x ={X}, y = {LT}] {\table};
+        \addlegendentry{LCP}
+        
+        \addplot[green, ultra thick] table [x ={X}, y = {LOT}] {\table};
+        \addlegendentry{Aries-opt}
     
+    \end{axis}
+\end{tikzpicture} 
+\end{figure}
+
+\end{column}%
+\end{columns}  
 \end{frame}
-\begin{frame}{Analysis and critics}
     
+\begin{frame}{Analysis and critics}
+    \begin{itemize}
+        \item Partial analysis of the language
+        \item Valid transformation into chronicle and plan generation
+        \item Integration in the refinement loop of RAE
+        \item Promising results for simple domains
+    \end{itemize}
 \end{frame}

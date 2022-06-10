@@ -1,55 +1,19 @@
 \section{Conclusion \& perspectives (2 min)}
-\begin{frame}{On the paper}
-    
-\end{frame}
-\begin{frame}{Perspectives}
-    
-\end{frame}
-
-\begin{frame}{Conclusion}
-    \begin{itemize}
-        \item Acting language with:
-        \begin{itemize}
-            \item Concurrency handling
-            \item Asynchronous execution
-            \item Conversion to descriptive model
-        \end{itemize}
-        \pause
-        \item Acting system:
+\begin{frame}[c]{On the paper}
+    OMPAS, an acting system:
         \begin{itemize}
             \item Using the custom language
             \item Capable of using planning to guide the refinement of task
-            \item Reactively handle jobshop
+            \item By extracting descriptive model from operational model
         \end{itemize}
-    \end{itemize}
-\end{frame}
-    
-\begin{frame}{A little perspective on the results}
-\begin{itemize}
-    \item Most domains are simple and mostly problems of graph exploration.
-    \pause
-    \item Results show that planning is better than greedy, but comparison with, for example UPOM,  on the same domains could be interesting.
-    \pause
-    \item No error in the execution so no new plan is required.
-\end{itemize}
-\end{frame}
 
-\begin{frame}{Short-term challenges}
-    \begin{itemize}
-        \item Handle all core operators, in particular async and await
-        \pause
-        \item Formalization of resource management in the acting engine
-        \pause
-        \item Graph Flow instead of SSA => branching representation
-        \pause
-        \item Errors modelled in descriptive models
-    \end{itemize}
 \end{frame}
-
-\begin{frame}{Mid-term challenges}
+\begin{frame}[c]{Perspectives}
     \begin{itemize}
-        \item Resolve Jobshop and Flowshop problems in dynamic environment
+        \item Test on more complex problems than graph exploration
         \pause
-        \item Use planning both planning as anticipation, and in continuous planning
+        \item Compare with other techniques (UPOM, Run-Lazy-Refineahead,\dots)
+        \pause
+        \item Take into account error handling from operational model into the chronicle encoding
     \end{itemize}
 \end{frame}
