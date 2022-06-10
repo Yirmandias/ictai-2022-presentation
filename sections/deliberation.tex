@@ -139,28 +139,13 @@
 
     
 \end{frame}
-\begin{frame}{Using planning to guide the refinement}
-    Make a high-level choice based on future choices the agent will have to make and its own capabilities to modify its environment.
-    Requirements:
-    \begin{itemize}
-        \item a Model
-        \item \dots
-    \end{itemize}
-    Problems: 
-    \begin{itemize}
-        \item 
-    \end{itemize}
-    Proposed solution:
-    \begin{itemize}
-        \item 
-    \end{itemize}
-\end{frame}
+
 \begin{frame}{Improve Select with planning}
     \begin{center}
         
     Role:
     
-    $Select(\tau, p_1,\dots,p_n) \rightarrow \{m, p_1, \dots, p_n,\dots,p_m\}$
+    $Select(\tau, p_1,\dots,p_n) \rightarrow \{m_s, p_1, \dots, p_n,\dots,p_m\}$
 
     \end{center}
 
@@ -176,23 +161,118 @@
     \item \textbf{Heuristic:} sort with heuristic function
     \pause
     
-    \underline{Propositions: } Learn$\pi$ and Learn$\pi_i$
+    \underline{Propositions:} Learn$\pi$ and Learn$\pi_i$ (refs?)
     \pause
     
-    \underline{Problem :} Gives better quality choices but does not ensures dead-lock free choices
+    \underline{Problem:} Gives better quality choices but does not ensures dead-lock free choices
     \pause
     \item \textbf<5->{Use look-ahead techniques} : capacity to project the system from the current state to possible future state
 
     \end{itemize}
 \end{frame}
-
-\begin{frame}{Extract a planning domain from acting domain}
-    Use a Lisp language:
+\begin{frame}{Using planning in an acting system}
+    %Make a high-level choice based on future choices the agent will have to make and its own capabilities to modify its environment.
+    Requirements:
     \begin{itemize}
-        \item Turing complet
-        \item primitives d'acting
-        \item immutable
-        \item functional
-        \item pure
+        %\setlength{\leftmargini}{0pt}
+        \item Planning domain $P_\Delta$: \textit{descriptive models}
+        \item Planner compatible with $P_\Delta$
     \end{itemize}
+    Problems: 
+    \begin{itemize}
+        \item Limited dedicated languages: PDDL, ANML,\dots
+        \item operational model $\not\equiv$ descriptive model
+        \item Harder design 
+    \end{itemize}
+
 \end{frame}
+\begin{frame}{Extract a planning domain from acting domain}
+    \centering
+    \begin{tikzpicture}
+        \node[align = center] (O) {Operational\\ model \\};
+        \node[right=6em of O, align = center] (D) {Descriptive\\ Model \\(chronicles)};
+        \draw[-latex, ultra thick] (O.east)-- node[above, midway] (c) {\textbf{Extracting}} (D.west);
+    \end{tikzpicture}
+
+    ~
+
+    Plan with \textbf{Aries} (hierarchical LCP extension):
+    \begin{itemize}
+        \item Chronicle encoding of descriptive models.
+        \item CSP-based research. 
+    \end{itemize}
+
+\end{frame}
+
+\begin{frame}{Analyzable acting language}
+    Requires general purpose operational (acting) language with an identified and simple semantic
+
+    ~
+
+    \begin{center}
+        Lisp dialect (Scheme variant)
+    \end{center}
+    
+    ~
+
+    \begin{columns}
+        \begin{column}{0.45\textwidth}
+            Perks:
+            \begin{itemize}
+                \item Few primitives
+                \item Immutable
+                \item Functional
+                \item Pure
+            \end{itemize}
+        \end{column}
+    \end{columns} 
+\end{frame}
+
+\begin{frame}{Synthesis of the proposition}
+    \pause
+        \centering
+        Task refinement guided by planning:
+
+        ~
+        
+        \begin{tikzpicture}
+            \node[draw,
+            rounded corners,
+            minimum width = 5em,
+            minimum height = 3em] (select) {\LARGE Select};
+            \node[draw,
+            rounded corners,
+            right = 6em of select,
+            minimum width = 5em,
+            minimum height = 3em] (aries) {\LARGE Aries};
+            \path[->, every node/.style={font=\sffamily\small}]
+            (select) edge[bend right] node [right, below] {$P_\Delta, t(p_1,\dots,p_n)$} (aries)
+            (aries) edge[bend right] node [right, above] {$Plan(m_s, m_2,\dots,m_n)$} (select)
+            ;
+        \end{tikzpicture}
+
+        ~
+    
+        Planning domain extraction from operational models:
+
+        ~
+
+        \begin{tikzpicture}
+            \node (acting) {\LARGE $A_\Delta$};
+            
+            \node[draw,
+            rounded corners,
+            right= 3em of acting,
+            minimum height = 3em,
+            minimum width = 6em] (ext) {\Large Extraction};
+        
+            \node[right = 3em of ext] (planning) {\LARGE $P_\Delta$ };
+            
+            \path[->, every node/.style={font=\sffamily\small}]
+            (acting) edge (ext)
+            (ext) edge (planning);
+          \end{tikzpicture}
+
+\end{frame}
+
+

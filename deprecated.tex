@@ -1,169 +1,24 @@
-\begin{frame}
-\frametitle{How an agent know what to do next?}
-\begin{itemize}
-    \item Intelligent agents have to make decisions
-    \item Either reactive in function of the current state of the world, they can choose the best next step decision
-    \item Act with some sense of what could happen, and what is best taking into account the global picture
-\end{itemize}
-\end{frame}
-
-\begin{frame}
-\frametitle{Reactivity vs Anticipation}
-\begin{itemize}
-    \item pros and cons
-    \item 
-\end{itemize}
-\end{frame}
-
-\subsection{Works and perspectives of the literature}
-\begin{frame}{State of the Art}
-    \textit{A little overview of what exists, what are the lines of research already explored}
-    \textit{What could be refined, what we chose to explore and why?}
-\end{frame}
-
-\begin{frame}{LValue kinds as defined in SOMPAS}
-\begin{center}
-    Symbol, String, Number, Fn, AsyncFn, Lambda, CoreOperator, Future, Err, Map, List, True, Nil
-    
-    \textbf{Nil} represents the boolean false and the empty list.
-\end{center}
-\end{frame}
-
-
-\begin{frame}[fragile]{Conversion from SSA to chronicle}
-    Suppositions:
+\begin{column}{0.45\textwidth}
+    Low-level primitives:
+    \tiny
     \begin{itemize}
-        \item Excluding error cases
-        \item Each primitive computation is pure and instantaneous
-        \item Each computation is linked to a timepoint and a uniquely defined variable
-    \end{itemize}
-    Rules:
-    \begin{itemize}
-        \item 
-    \end{itemize}
-\end{frame}
-
-
-\begin{frame}{Conditions of benchmarking}
-Comparison of systems in 3 different modes
-    \begin{itemize}
-        \item Greedy
-        \item Using LCP
-        \item Using LCP and searching for an optimal plan
+        \setlength
+        \item State-function (label, typed parameters \& result):
+        \begin{lstlisting}
+(def-state-function
+at
+'(?r robot)
+'(?l location))
+        \end{lstlisting}
+        \item Action (label, typed parameters):
+        
+        \begin{lstlisting}
+(def-action pick '(?r robot))
+        \end{lstlisting}
     \end{itemize}
 
-~
+    ~
 
-\pause
-Metrics:
-\begin{itemize}
-    \item Executed actions
-    \item Total refinement time
-\end{itemize}
-\end{frame}
-
-\subsection{Summary}
-\begin{frame}{Summary}
-    \begin{itemize}
-        \item Partial analysis of the language
-        \item valid transformation into chronicle and plan generation
-        \item Integration in the refinement loop of RAE
-        \item Promising results for simple domains
-    \end{itemize}
-\end{frame}
-
-
-\begin{frame}[fragile]{Example of a method}
-\begin{columns}[T] % align columns
-\begin{column}{.48\textwidth}
-\small
-\textbf{Operational model:}
-\tiny
-\begin{lstlisting}(do
-(def-method m1
-'((:task pick-and-drop)
-  (:params (?ball ball)
-    (?room room)
-    (?gripper gripper)
-    (?departure room))
-  (:pre-conditions (and-cond 
-    ( = (at ?ball) (at-robby))
-    (= (carry ?gripper) no_ball)
-    (= ?departure (at-robby))))
-  (:body
-    (do
-     (pick ?ball ?departure ?gripper)
-     (t_move ?room)
-     (drop ?ball ?room ?gripper)))))
-\end{lstlisting}
-\end{column}%
-\hfill%
-\begin{column}{.48\textwidth}
-\small
-\textbf{Chronicle model:}
-\tiny
-\begin{align*}
-name: (&m1\ ?ball\ ?room\ ?gripper\ ?departure)\\
-task: (&pick-and-drop\ ?ball\ ?room)\\
-variable: \{&?ball,?departure,?gripper,?room,s,e,prez,\\
-&r1,r2,r3,r4,r5,r6,r7,r,s,t1,t2,t3,t4,t5\}\\
-constraints: \{&r1 = ball, r2 = room, r3 = gripper, r4 = room \\
-	&r5 = r6, r7 = no_ball, ?departure = r6, r = true, \\
-	&t4 \leq t5, t3 < t4, t2 \leq t3, t2 \leq t4,\\
-	&t1 < t2, t5 < e, t4 \leq e,\\
-	&s <= t1, s <= t2, s <= e\}\\
-conditions: \{&[s,s]\ instance(?ball) = r1 \\
-	&[s,s]\ instance(?room) = r2 \\
-	&[s,s]\ instance(?gripper) = r3 \\
-	&[s,s]\ instance(?departure) = r4 \\
-	&[s,s]\ at (?ball) = r5 \\
-	&[s,s]\ at-robby() = r6 \\
-	&[s,s]\ carry (?gripper) = r7 \}\\
-effects: \{&\} \\
-subtasks: \{&[s,t1]\ (pick ?ball ?departure ?gripper)\\
-	&[t2,t3]\ (move ?departure ?room) \\
-	&[t4,t5]\ (drop ?ball ?room ?gripper)\}
-\end{align*}
+    \normal
+Others: \textit{def-lambda, def-type, def-constant}
 \end{column}
-\end{columns}
-\end{frame}
-
-\begin{frame}[fragile]{Example of translation of an action}
-Primitive action move
-\begin{columns}[T] % align columns
-\begin{column}{.48\textwidth}
-\small
-\textbf{Operational model:}
-\tiny
-\begin{lstlisting}
-(def-action-model move
-'((:params (?from room) (?to room))
-  (:pre-conditions (and-cond 
-    (= (at-robby) ?from)
-    (!= ?from ?to))
-    (= (connected ?from ?to) yes))
-  (:effects
-    (begin
-     (assert 'at-robby ?to)))))
-\end{lstlisting}
-\end{column}%
-\hfill%
-\begin{column}{.48\textwidth}
-\small
-\textbf{Chronicle model:}
-\tiny
-\begin{align*}
-name :(&move\ ?from\ ?to)\\
-task :(&move\ ?from\ ?to)\\
-variables: \{&?from, ?to, s, e, p, r1,r2,r3,r\}\\
--constraints: \{&r = true, r1 = room, r2 = room\\
-	& r3 = ?from, ?from != ?to, s < e \}\\
--condition:\{&[s,s] (instance\ ?from) = r1 \\
-	&[s,s] instance(?to) = r2\\
-	&[s,s] at-robby = r3 \}\\
- -effects:\{&[e,e] at-robby \leftarrow ?to\} \\
- -subtasks:& \{\}
-\end{align*}
-\end{column}%
-\end{columns}
-\end{frame}

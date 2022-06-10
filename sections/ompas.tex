@@ -1,19 +1,175 @@
 \section{OMPAS (3 min)}
-\begin{frame}{Overview of the system}
+\begin{frame}{OMPAS: Overview of the system}
+\begin{center}
+    \begin{tikzpicture}%[scale=0.6, every node/.style={scale=0.6}]
+        \node[draw = black, very thick,
+            minimum width = 10em,
+            minimum height = 3em,
+            rounded corners,
+            text = black,
+            text centered, text depth = 5em,
+            align = center,
+            ] (R) at (0,0) {RAE};
+  
+            \node[draw = black, very thick,
+            text centered,
+            rounded corners,
+            text = black,
+            align = center,] (M) at (-1,-0.25) {Main \\\small Agenda};
+  
+  
+            \node[draw = black, very thick,
+            text centered,
+            rounded corners,
+            text = black,
+            align = center,] (S) at (1,0.25) {Select};
+  
+            
+            \node[draw = black, very thick,
+            text centered,
+            rounded corners,
+            text = black,
+            align = center,] (P) at (1,-0.75) {Planner};
+  
+            \path[->, every node/.style={font=\sffamily\small}]
+            (M) edge[bend left] (S)
+            (S) edge[bend right] (P)
+            (S) edge[bend left] (M)
+            (P) edge[bend right] (S);
+  
+            
+  
+  
+        \node[draw = black, very thick,
+            text centered,
+            left = 5em of R,
+            minimum width = 4em,
+            minimum height = 3em,
+            rounded corners,
+            text = black] (Mon) {Monitor};
+        
+        \node[draw = black, very thick,
+            text centered,
+            right = 6em of R,
+            minimum width = 4em,
+            minimum height = 3em,
+            rounded corners,
+            text = black] (Pl) {Platform};
+        
+        %text between Monitor and RAE
+        \path[->]
+        (Mon.20) edge[bend left] node [midway, above, align=center] {\footnotesize \textit{Tasks}} (R.170)
+        (R.-170) edge [bend left] node [midway, below] {\footnotesize \textit{Internal State}} (Mon.-20)
+    
+        (R.10) edge[bend left] node [midway, above] {\footnotesize \textit{Actions}} (Pl.160)
+        
+        (Pl.-160) edge [bend left] node [midway, below, align = center] {\footnotesize \textit{Platform State},\\\footnotesize \textit{Action Status}} (R.-10);
+        
+        \node[text centered,
+            below = 2em of Mon,
+            minimum width = 5em,
+            minimum height = 3em,
+            text = black,
+            align =center] (H) {\footnotesize Human,\\\footnotesize Program};
+        \draw[-latex] (H)--(Mon);
+    \end{tikzpicture}
+
+\end{center}
+    
+~ 
+
 Assets:
     \begin{itemize}
         \item RAE with concurrency
         \item Select with HTN temporal planner
     \end{itemize}
 \end{frame}
-\begin{frame}{SOMPAS : An acting language...}
+
+\begin{frame}{Scheme OMPAS : An acting language...}
+    Acting primitives:
+\begin{itemize}
+\pause
+    \item exec-task: execute and monitor a task
+\pause
+    \begin{itemize}
+        \item primitive-task: request to the platform
+        \item abstract-task: select a method and execute the operational model.
+    \end{itemize}
+\pause
+    \item read-state: return the value of a state-variable
+\end{itemize}
 \end{frame}
 
-\begin{frame}{...to define acting domains}
+\begin{frame}[fragile]{...to define acting domains $A_\Delta$}
+    \setlength{\leftmargini}{0pt}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            High-level primitives:
+            \begin{itemize}
+                \footnotesize
+                \item Task (label, typed parameters):
+                \tiny
+                \begin{lstlisting}
+(def-task t_process_package
+    '(?p package))
+                \end{lstlisting}
+                \footnotesize
+                \item Method (label, typed parameters, pre-conditions, body):
+                \tiny
+                \begin{lstlisting}
+(def-method m_process_to_do_r
+'((:task t_process_package)
+  (:params (?p package))
+  (:pre-conditions
+    (!= (package.processes_list ?p)
+        nil)))
+  (:body
+    (do
+     (define ?m ...)
+     (t_process_on_machine ?p ?m)
+     (t_process_package ?p)))))    
+                \end{lstlisting}
+            \end{itemize}
+        \end{column}
+
+        \begin{column}{0.5\textwidth}
+            Low-level primitives:
+            \begin{itemize}
+            \footnotesize
+            \item State-function (label, typed parameters \& result):
+            \tiny
+            \begin{lstlisting}
+(def-state-function
+at
+'(?r robot)
+'(?l location))
+            \end{lstlisting}
+            \footnotesize
+            \item Action (label, typed parameters):
+            \tiny
+            \begin{lstlisting}
+(def-action pick '(?r robot))
+                \end{lstlisting}
+            \end{itemize}
+
+            ~
+        \normalsize
+        Others:
+        
+        \textit{lambda, type, constant}
+        \end{column}
+
+        
+
+    \end{columns}
     
+
 \end{frame}
 
-\begin{frame}{BONUS: jobshop}
-    
+
+\begin{frame}[c]{BONUS: Jobshop}
+\centering
+\LARGE
+\href{https://youtu.be/nWGewFgXYcI}{Gobot Video with ft06 problem}
 \end{frame}
 
