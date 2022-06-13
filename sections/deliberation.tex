@@ -38,11 +38,12 @@
         \end{itemize}
         
         ~
-
+        \pause
         
         Acting domain \textbf{$A_\Delta (A, T, M_t)$}: Hierarchical operational models
         
-                \begin{itemize}
+        \pause
+        \begin{itemize}
         
         
          \item[$A$] \textit{(low-level skills)}: primitive tasks
@@ -107,8 +108,11 @@
     \end{itemize}
     \end{column}
     \begin{column}{0.65\textwidth}
+        
+        \pause
         Algorithms:
         \small
+        \pause
         \begin{itemize}
             \setlength{\leftmargini}{-1pt}
             \item \textbf{Main:} 
@@ -121,12 +125,17 @@
                 \pause
                 \item \textbf{Progress} $m$
             \end{itemize}
+            \pause
             \item \textbf{Progress:}
                 \begin{itemize}
-                \item Monitor execution of $m$.
-                \item Refine subtasks in $m$.    
-                \item Monitor execution of subtasks.
-                \item \textbf{Retry} $\tau$ in case of \emph{failure}:
+                \pause
+                    \item Monitor execution of $m$.
+                \pause
+                    \item Refine subtasks in $m$.    
+                \pause
+                    \item Monitor execution of subtasks.
+                \pause
+                    \item \textbf{Retry} $\tau$ in case of \emph{failure}:
                 
                 Call \textbf{Select} to get a new method;
                 
@@ -155,10 +164,8 @@
         text = black,
         align=center,] (F) at (0,0) {\textbf{Select}};
         
-    \pause
     \node[left= 2em of F] (i) {\textbf{$\tau(p_1,\dots,p_n), \xi (state)$}};
     \node[right= 2em of F] (o) {\textbf{$m(p_1, \dots, p_n,\dots,p_m)$}};
-    \pause
     \path[->]
     (i) edge (F)
     (F) edge (o);
@@ -167,9 +174,9 @@
     
 
     %$Select(\tau, p_1,\dots,p_n) \rightarrow \{m_s, p_1, \dots, p_n,\dots,p_m\}$
-
     \end{center}
 
+    \pause
     Techniques:
     \begin{itemize}
 
@@ -189,7 +196,7 @@
         \item A planner
         \item Descriptive model of the agent skills : describes the set of states that may result from performing tasks.
     \end{itemize} 
-
+\pause
     Descriptive models shortcomings:
     \begin{itemize}
         \item Made limited dedicated languages: PDDL \cite{foxPDDL2ExtensionPDDL2003}, ANML \cite{smith2008anml},\dots
@@ -197,7 +204,7 @@
     \end{itemize}
 
     ~
-    
+    \pause
     \centering
     \begin{tikzpicture}
         \node[align = center] (O) {Operational\\ model \\};
@@ -205,6 +212,7 @@
         \draw[-latex, ultra thick] (O.east)-- node[above, midway] (c) {\textbf{Extracting}} (D.west);
     \end{tikzpicture}
 
+    \pause
     Plan with \textbf{Aries} (hierarchical LCP\cite{bit-monnotConstraintBasedEncodingDomainIndependent2018} extension):
 
 \end{frame}
@@ -223,6 +231,7 @@
             $\rightarrow$
         \end{column}
         \begin{column}{0.5\textwidth}
+            \pause
             Lisp dialect (Scheme variant) \cite{moretti1979lambda}
 
             Perks:
@@ -237,7 +246,6 @@
 \end{frame}
 
 \begin{frame}{Synthesis of the proposition}
-    \pause
         \centering
         Task refinement guided by planning:
 
@@ -260,7 +268,7 @@
         \end{tikzpicture}
 
         ~
-    
+    \pause
         Planning domain extraction from operational models:
 
         ~
