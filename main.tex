@@ -1,4 +1,4 @@
-\documentclass[handout, t, english]{beamer}
+\documentclass[t, english]{beamer}
 \usetheme{Frankfurt}
 \usepackage[utf8]{inputenc}
 \usepackage{natbib}
@@ -12,8 +12,11 @@
 \usepackage{pgfplots}
 \usepackage{comment}
 
+%animations (for gifs)
+\usepackage{animate}
+
 %customize itemize
-\usetikzlibrary{positioning,calc,intersections}
+\usetikzlibrary{positioning,calc,intersections,shapes.geometric}
 
 \setbeamertemplate{footline}[frame number]
 
@@ -63,7 +66,7 @@ jeremy.turi@laas.fr, abitmonnot@laas.fr}
 
 \input{sections/deliberation}
 \input{sections/ompas}
-\input{sections/selectplan.tex}
+%\input{sections/selectplan.tex}
 \input{sections/conclusion}
 \begin{frame}[allowframebreaks]
   \frametitle{References}

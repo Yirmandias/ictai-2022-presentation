@@ -1,4 +1,10 @@
 *synctex.gz
 *.pdf
 *.md
+*.aux
+*.bbl
+*.fls
+*.log
+*.snm
+*.toc
 deprecated.tex

@@ -1,81 +1,82 @@
 \section{Deliberative agent (7 min)}
 
-\begin{frame}{Agent definition}
-    \center An entity capable of :
-    \pause
-    \begin{enumerate}
-        \item Perceiving its environment
-        \pause
-        \item Modifying its environment (actions)
-        \pause
-        \item \textbf{Reasoning about its knowledge}
-    \end{enumerate}
+\begin{frame}{What is an agent}
 
-    \centering
-    \begin{tikzpicture}[thick,scale=0.8, every node/.style={scale=0.8}]
-    \node[draw = black, very thick,
-        minimum width = 12em,
-        minimum height = 5em,
-        rounded corners,
-        text = black,
-        align=center,] (F) at (0,0) {\textbf{Reasoning}\\ Knowledge};
-        
-    \pause
-    \node[above=1em of F, xshift = -12em] (t1) {\Large\textbf{Inputs}};
-    \node[above=1em of F, xshift = 12em] (t2) {\Large \textbf{Outputs}};
-    \pause
-    \node[yshift = 1.5em, xshift = -12em] (t3) {\textbf{Perception datas}};
-    \node[yshift = -1.5em, xshift = -12em] (t4) {\textbf{Objectives}};
-    \draw[-latex, ultra thick] (-6,0)--(F.west);
-    \pause
-    \node[xshift = 15em] (t5) {\textbf{Actions}};
-    \draw[-latex, ultra thick] (F.east) -- (t5);
-    \end{tikzpicture}  
+    \begin{columns}[T]
+        \begin{column}{0.3\textwidth}
+            A robotic agent
+
+            ~
+
+            \includegraphics[width = 0.7\textwidth]{images/icons8-robot-gustav-500.png}
+        \end{column}
+        \begin{column}{0.7\textwidth}
+            \center capable of :
+            \pause
+            \begin{enumerate}
+                \item Perceiving its environment
+                \pause
+                \item Modifying its environment (actions)
+                \pause
+                \item \textbf{Deliberating:} Reasoning about its \textbf{skills} in order to fulfill a goal
+            \end{enumerate}
+        \end{column}
+    \end{columns}
+
+ 
 \end{frame}
 
-\begin{frame}{Skills domain}
-    \begin{center}
-        \large
-        Acting domain \textbf{$A_\Delta (A, T, M_t)$}:
+\begin{frame}{Represent the skills of an agent}
+
+\begin{columns}[T]
+    \begin{column}{0.6\textwidth}
+
+        Robot behavior = \textbf{operational model}:
+        \begin{itemize}
+            \item Executable program
+            \item General purpose language
+        \end{itemize}
         
-        hierarchical operational models
-    \end{center}
-\begin{columns}
-    \begin{column}{0.65\textwidth}
+        ~
+
         
-     \begin{itemize}
-         \item[$A$] \textit{(low level capabilities)}: primitive tasks
+        Acting domain \textbf{$A_\Delta (A, T, M_t)$}: Hierarchical operational models
+        
+                \begin{itemize}
+        
+        
+         \item[$A$] \textit{(low-level skills)}: primitive tasks
          \pause
          
          \textit{\footnotesize(move, grasp, look)}
          \pause
-         \item[$T$] \textit{(high-level capabilities)}: abstract tasks
+         \item[$T$] \textit{(high-level skills)}: abstract tasks
          \pause
 
          \textit{\footnotesize(set the table, prepare a coffee)}
          \pause
-         \item[$M_t$] \textit{(Operational models)}: methods
-         ("know how")
-         \footnotesize
+         \item[$M_t$] \textit{("Know how")}: methods (operational models)
 
-         \textbf{Executable program: } General purpose language, common programming constructs
+         
      \end{itemize}
     \end{column}
     \begin{column}{0.45\textwidth}
         \begin{figure}
             \begin{tikzpicture}
-                \node[draw, rounded corners, ultra thick] (t) {$t_{move}$} [sibling distance = 2.5cm]
-                  child {node[draw, ultra thick] (m1) {$m_{noop}$} edge from parent [dashed]} 
-                  child {node[draw, ultra thick] (m2) {$m_{recursive}$} edge from parent [dashed]
-                  child {node[draw, circle, solid, ultra thick] (a1) {move} edge from parent [solid]}
-                  child {node[draw, rounded corners, solid, ultra thick] {$t_{move}$} edge from parent [solid]}};
+                \node[draw,ellipse, ultra thick] (t) {\textit{open door}} [sibling distance = 3.25cm]
+                  child {node[draw, ultra thick] (m1) {$m_1$} edge from parent [dashed]
+                  child {node[draw,rounded corners, ultra thick, solid] (a1) {$push$} edge from parent
+                  }} 
+                  child {node[draw, ultra thick] (m2) {$m_2$} edge from parent [dashed] [sibling distance = 1.5cm]
+                  child {node[draw, rounded corners, solid, ultra thick] (a2) {grab wrist} edge from parent [solid]}
+                  child {node[draw, rounded corners, solid, ultra thick] {$pull$} edge from parent [solid]}};
                 \node[right = 0em of t] {$\in T$};
                 \node[right = 0em of m1] {$\in M_t$};
                 \node[right = 0em of m2] {$\in M_t$};
                 \node[right = 0em of a1] {$\in A$};
 
             \end{tikzpicture}
-            \caption{Example of hierarchy for the \textit{task} $t_{move}$}
+            \caption{Example of hierarchy for the \textit{task} \textit{open door}}
 
             
         \end{figure}
@@ -83,56 +84,55 @@
 \end{columns}
     
 \end{frame}
-\begin{frame}{Refinement Acting Engine (RAE)\cite{ghallabAutomatedPlanningActing2016} : Algorithms to handle acting domains and make choices}
+\begin{frame}{Refinement Acting Engine (RAE)\cite{ghallabAutomatedPlanningActing2016} : Deliberation algorithms using hierarchical operational models}
 \begin{columns}
     \begin{column}{0.35\textwidth}
     \pause
     \setlength{\leftmargini}{-1pt}
     %\setlength{\parsep}{1pt}
     %\setlength{\parskip}{0pt}
+    RAE features:
+    \small
     \begin{itemize}
-        \item Performs multiple tasks in parallel
+        \item Perform multiple tasks in parallel
         \pause
-        \item RAE decision points:
+        \item Automated deliberation: Refinement of task
         \begin{itemize}
-            %\setlength{\leftmargini}{-1cm}
+            \setlength{\leftmargini}{-1pt}
             \pause
-            \item \textbf{Refinement:}
-            
-            $task \rightarrow  method \in M_t$.
+            \item Refinement of task into a method
             \pause
-            \item \textbf{Instantiating:}
-            
-            $parameter \rightarrow value \in D_p$
+            \item Instantiating of \textbf{arbitrary} variables
         \end{itemize}
     \end{itemize}
     \end{column}
     \begin{column}{0.65\textwidth}
+        Algorithms:
+        \small
         \begin{itemize}
             \setlength{\leftmargini}{-1pt}
             \item \textbf{Main:} 
             \begin{itemize}
-                \item Receive:  $\tau$ (task or event);
-                add it the \textbf{agenda} ({ongoing tasks})
+                \item Receive $\tau$ (task or event);
+                
+                add it to the \textbf{agenda} (ongoing tasks)
                 \pause
-                \item Refine: $tau$ using \textbf{Select.}
+                \item Refine $tau$: \textbf{Select} an applicable method $m$ for $\tau$
                 \pause
-                \item Progress: $tau \in$ agenda
+                \item \textbf{Progress} $m$
             \end{itemize}
-            \pause
-            \item Select: $\tau \rightarrow m_s$
-            
-            $ m_s \in \{m \in M_t, applicable(m)\}$
-            \pause
             \item \textbf{Progress:}
                 \begin{itemize}
-                \item Refine subtasks $\tau_i$ in $m_s$.    
-                \item Monitor execution of $\tau_i$.
-                \item \textbf{Retry} the $\tau$ in case of \emph{failure}.
+                \item Monitor execution of $m$.
+                \item Refine subtasks in $m$.    
+                \item Monitor execution of subtasks.
+                \item \textbf{Retry} $\tau$ in case of \emph{failure}:
+                
+                Call \textbf{Select} to get a new method;
+                
+                \textbf{Progress} the new method.
                 \end{itemize}
                 \pause
-            
-            \item \textbf{Retry:} call Select to get a new method; progress the new method.
         \end{itemize}
     \end{column}
 \end{columns}
@@ -140,53 +140,64 @@
     
 \end{frame}
 
-\begin{frame}{Improve Select with planning}
+\begin{frame}{Improve the refinement using planning}
     \begin{center}
         
-    Role:
+    Role of Select:
+
+    ~
+
+    \begin{tikzpicture}[thick,scale=0.8, every node/.style={scale=0.8}]
+    \node[draw = black, very thick,
+        minimum width = 6em,
+        minimum height = 3em,
+        rounded corners,
+        text = black,
+        align=center,] (F) at (0,0) {\textbf{Select}};
+        
+    \pause
+    \node[left= 2em of F] (i) {\textbf{$\tau(p_1,\dots,p_n), \xi (state)$}};
+    \node[right= 2em of F] (o) {\textbf{$m(p_1, \dots, p_n,\dots,p_m)$}};
+    \pause
+    \path[->]
+    (i) edge (F)
+    (F) edge (o);
+
+    \end{tikzpicture}
     
-    $Select(\tau, p_1,\dots,p_n) \rightarrow \{m_s, p_1, \dots, p_n,\dots,p_m\}$
+
+    %$Select(\tau, p_1,\dots,p_n) \rightarrow \{m_s, p_1, \dots, p_n,\dots,p_m\}$
 
     \end{center}
 
     Techniques:
     \begin{itemize}
 
-    \item \textbf{Greedy (Basic RAE functioning):} $\rightarrow m_s \in applicable(m)$
+    \item Greedy (Basic RAE functioning): arbitrary applicable method
     \pause
     
     \underline{Problem:} Does not take into account future refinements (can lead into dead-locks)
     \pause
-    
-    \item \textbf{Heuristic:} sort with heuristic function
-    \pause
-    
-    \underline{Propositions:}Learn$\pi$ and Learn$\pi_i$  \cite{patraDeliberativeActingOnline2021}
-    \pause
-    
-    \underline{Problem:} Gives better quality choices but does not ensures dead-lock free choices
-    \pause
-    \item \textbf<5->{Use look-ahead techniques} : capacity to project the system from the current state to possible future state
+    \item \textbf{look-ahead(planning)} : capacity to project the system from the current state to possible future state
 
     \end{itemize}
 \end{frame}
-\begin{frame}{Using planning in an acting system}
+\begin{frame}{How to use planning in RAE}
     %Make a high-level choice based on future choices the agent will have to make and its own capabilities to modify its environment.
-    Requirements:
+    Requires:
     \begin{itemize}
-        %\setlength{\leftmargini}{0pt}
-        \item Planning domain $P_\Delta$: \textit{descriptive models}
-        \item Planner compatible with $P_\Delta$
-    \end{itemize}
-    Problems: 
+        \item A planner
+        \item Descriptive model of the agent skills : describes the set of states that may result from performing tasks.
+    \end{itemize} 
+
+    Descriptive models shortcomings:
     \begin{itemize}
-        \item Limited dedicated languages: PDDL \cite{foxPDDL2ExtensionPDDL2003}, ANML \cite{smith2008anml},\dots
-        \item operational model $\not\equiv$ descriptive model
-        \item Harder design 
+        \item Made limited dedicated languages: PDDL \cite{foxPDDL2ExtensionPDDL2003}, ANML \cite{smith2008anml},\dots
+        \item operational model $\not\equiv$ descriptive model $\rightarrow$ Harder design
     \end{itemize}
 
-\end{frame}
-\begin{frame}[c]{Extract a planning domain from acting domain}
+    ~
+    
     \centering
     \begin{tikzpicture}
         \node[align = center] (O) {Operational\\ model \\};
@@ -194,29 +205,26 @@
         \draw[-latex, ultra thick] (O.east)-- node[above, midway] (c) {\textbf{Extracting}} (D.west);
     \end{tikzpicture}
 
-    ~
-
     Plan with \textbf{Aries} (hierarchical LCP\cite{bit-monnotConstraintBasedEncodingDomainIndependent2018} extension):
-    \begin{itemize}
-        \item Chronicle encoding of descriptive models.
-        \item CSP-based research. 
-    \end{itemize}
 
 \end{frame}
 
-\begin{frame}{Analyzable acting language}
-    Requires general purpose operational (acting) language with an identified and simple semantic
-
-    ~
-
-    \begin{center}
-        Lisp dialect (Scheme variant) \cite{moretti1979lambda}
-    \end{center}
-    
-    ~
-
-    \begin{columns}
+\begin{frame}[c]{An analyzable acting language to extract descriptive models}
+    \begin{columns}[c]
         \begin{column}{0.45\textwidth}
+            Acting language Requirements:
+            \begin{itemize}
+                \item General purpose language
+                \item Identified and simple semantic
+            \end{itemize}
+        \end{column}
+        \begin{column}[c]{0.1\textwidth}
+            \centering
+            $\rightarrow$
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            Lisp dialect (Scheme variant) \cite{moretti1979lambda}
+
             Perks:
             \begin{itemize}
                 \item Few primitives
@@ -225,7 +233,7 @@
                 \item Pure
             \end{itemize}
         \end{column}
-    \end{columns} 
+    \end{columns}
 \end{frame}
 
 \begin{frame}{Synthesis of the proposition}

@@ -1,24 +1,63 @@
-\begin{column}{0.45\textwidth}
-    Low-level primitives:
-    \tiny
-    \begin{itemize}
-        \setlength
-        \item State-function (label, typed parameters \& result):
-        \begin{lstlisting}
-(def-state-function
-at
-'(?r robot)
-'(?l location))
-        \end{lstlisting}
-        \item Action (label, typed parameters):
+
+\begin{comment}
+    \centering
+    \begin{tikzpicture}[thick,scale=0.8, every node/.style={scale=0.8}]
+    \node[draw = black, very thick,
+        minimum width = 12em,
+        minimum height = 5em,
+        rounded corners,
+        text = black,
+        align=center,] (F) at (0,0) {\textbf{Reasoning}\\ Knowledge};
         
-        \begin{lstlisting}
-(def-action pick '(?r robot))
-        \end{lstlisting}
+    \pause
+    \node[above=1em of F, xshift = -12em] (t1) {\Large\textbf{Inputs}};
+    \node[above=1em of F, xshift = 12em] (t2) {\Large \textbf{Outputs}};
+    \pause
+    \node[yshift = 1.5em, xshift = -12em] (t3) {\textbf{Perception datas}};
+    \node[yshift = -1.5em, xshift = -12em] (t4) {\textbf{Objectives}};
+    \draw[-latex, ultra thick] (-6,0)--(F.west);
+    \pause
+    \node[xshift = 15em] (t5) {\textbf{Actions}};
+    \draw[-latex, ultra thick] (F.east) -- (t5);
+    \end{tikzpicture}
+\end{comment}
+
+\begin{frame}{Using planning in an acting system}
+    %Make a high-level choice based on future choices the agent will have to make and its own capabilities to modify its environment.
+    Requirements:
+    \begin{itemize}
+        %\setlength{\leftmargini}{0pt}
+        \item Planning domain $P_\Delta$: \textit{descriptive models}
+        \item Planner compatible with $P_\Delta$
+    \end{itemize}
+    Problems: 
+    \begin{itemize}
+        \item Limited dedicated languages: PDDL \cite{foxPDDL2ExtensionPDDL2003}, ANML \cite{smith2008anml},\dots
+        \item operational model $\not\equiv$ descriptive model
+        \item Harder design 
     \end{itemize}
 
-    ~
+\end{frame}
 
-    \normal
-Others: \textit{def-lambda, def-type, def-constant}
-\end{column}
+\begin{frame}[c]{Extract a planning domain from acting domain}
+    \centering
+    \begin{tikzpicture}
+        \node[align = center] (O) {Operational\\ model \\};
+        \node[right=6em of O, align = center] (D) {Descriptive\\ Model \\(chronicles)};
+        \draw[-latex, ultra thick] (O.east)-- node[above, midway] (c) {\textbf{Extracting}} (D.west);
+    \end{tikzpicture}
+
+    Plan with \textbf{Aries} (hierarchical LCP\cite{bit-monnotConstraintBasedEncodingDomainIndependent2018} extension)
+
+\end{frame}
+
+
+\begin{frame}[c]{BONUS: Jobshop}
+    \centering
+    \LARGE
+    \href{https://youtu.be/nWGewFgXYcI}{Gobot Video with ft06 problem}
+\end{frame}
+
+\begin{frame}
+    
+\end{frame}
