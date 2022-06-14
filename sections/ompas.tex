@@ -304,23 +304,44 @@ at
     
         %Extraction process
     
-          \node[below= 6em of ext, xshift = -12em, minimum width = 6em] (sompas) {\textbf{SOMPAS}};
-          \node[below=6em of ext, minimum width = 4em] (ssa) {\textbf{SSA}};
-          \node[below=6em of ext, xshift = 12em, minimum width = 6em] (chro) {\textbf{Chronicle}};
-          \path[->]
-          (sompas) edge
-          node[above, midway] {\footnotesize \textit{SSA translation}} 
-          node[below, midway] {\footnotesize \{translation rules\}}
-          (ssa)
-    
-          (ssa) edge
-          node[above, midway, align=center] {\footnotesize \textit{chronicle extraction,}\\\footnotesize \textit{post-processing}} 
-          node[below, midway] {\footnotesize \{extraction rules\}}
-          (chro);
-    
-          \path[-] (ext.-160) edge (sompas.160);
-          \path[-] (ext.-20) edge (chro.20);
-      \end{tikzpicture}
+        \node[below= 6em of ext, xshift = -12em, minimum width = 6em] (sompas) {\textbf{SOMPAS}};
+        \node[below=6em of ext, minimum width = 4em] (ssa) {\textbf{SSA}};
+        \node[below=6em of ext, xshift = 12em, minimum width = 6em] (chro) {\textbf{Chronicle}};
+        \node[below =2em of sompas] (e1) {\footnotesize(+ x y)};
+        \node[below =1em of ssa] (e2) {
+        \footnotesize    
+        \begin{minipage}{0.3\textwidth}
+            \begin{flalign*}
+                t_1:& r_1 \gets cst(+) \\
+                t_2:& r_2 \gets cst(x) \\
+                t_3:& r_3 \gets cst(y) \\
+                t_4:& r \gets apply(r_1,r_2,r_3)
+            \end{flalign*}
+        \end{minipage}};
+        
+        \node[below =1em of chro, align = left] (e2) {
+        \footnotesize    
+        \begin{minipage}{\textwidth}
+            \begin{flalign*}
+                r_2 &= x\\
+                r_3 &= y\\
+                r&= r_2 + r_3
+            \end{flalign*}
+        \end{minipage})};
+        \path[->]
+        (sompas) edge
+        node[above, midway] {\footnotesize \textit{SSA translation}} 
+        node[below, midway] {\footnotesize \{translation rules\}}
+        (ssa)
+
+        (ssa) edge
+        node[above, midway, align=center] {\footnotesize \textit{chronicle extraction,}\\\footnotesize \textit{post-processing}} 
+        node[below, midway] {\footnotesize \{extraction rules\}}
+        (chro);
+
+        \path[-] (ext.-160) edge (sompas.160);
+        \path[-] (ext.-20) edge (chro.20);
+    \end{tikzpicture}
 \end{frame}
 
 \begin{frame}[c,fragile]{Extraction example of a method}
