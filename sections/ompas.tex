@@ -102,8 +102,9 @@
         $\rightarrow$ embedded in operational models
         \item primitives tasks outcome $\rightarrow$ platform model
     \end{itemize}
-
 \end{frame}
+
+
 \begin{frame}[fragile]{Extend Select with the call of a planner}
     \begin{columns}[c]
         \begin{column}{0.4\textwidth}
@@ -166,11 +167,11 @@
     \begin{tikzpicture}[thick,scale=0.8, every node/.style={scale=0.8}]
         \node[draw = black, very thick,
             text centered,
-            minimum width = 12em,
+            minimum width = 10em,
             minimum height = 5em,
             rounded corners,
             text = black,
-            align=center] (F) at (0,0) {\textbf{Planner}\\$P_\Delta$};
+            align=center] (F) at (0,0) {\textbf{Planner}\\Aries};
         \node[above=1em of F, xshift = -12em] (t1) {\Large\textbf{Inputs}};
         \node[above=1em of F, xshift = 12em] (t2) {\Large \textbf{Outputs}};
         \node[yshift = 1.5em, xshift = -12em] (t3) {\textbf{State, Task instance}};
@@ -194,28 +195,10 @@
 \lstset{basicstyle=\tiny, columns=fullflexible}
 
 
-
-
-\begin{frame}{Scheme OMPAS : An acting language...}
-    Acting primitives:
-\begin{itemize}
-\pause
-    \item exec-task: execute and monitor a task
-\pause
-    \begin{itemize}
-        \item primitive-task: request to the platform
-        \item abstract-task: select a method and execute the operational model.
-    \end{itemize}
-\pause
-    \item read-state: return the value of a state-variable
-\end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]{...to define acting domains $A_\Delta$...}
+\begin{frame}[fragile]{Defining $A_\Delta$ with Scheme OMPAS (SOMPAS)}
     \setlength{\leftmargini}{0pt}
     \begin{columns}
         \begin{column}{0.5\textwidth}
-            High-level primitives:
             \begin{itemize}
                 \footnotesize
                 \item Task (label, typed parameters):
@@ -245,7 +228,6 @@
         \end{column}
 \pause
         \begin{column}{0.5\textwidth}
-            Low-level primitives:
             \begin{itemize}
                 \pause
             \footnotesize
@@ -281,8 +263,21 @@ at
 \end{frame}
 
 
+\begin{frame}{SOMPAS acting primitives}
+\begin{itemize}
+\pause
+    \item exec-task: execute and monitor a task
+\pause
+    \begin{itemize}
+        \item primitive-task: request to the platform
+        \item abstract-task: select a method and execute the operational model.
+    \end{itemize}
+\pause
+    \item read-state: return the value of a state-variable
+\end{itemize}
+\end{frame}
 
-\begin{frame}{...from which a planning domain can be extracted}
+\begin{frame}{Extraction of descriptive models from SOMPAS}
     \begin{tikzpicture}
     
         \node[draw = black, very thick,
@@ -303,11 +298,27 @@ at
           (ext) edge (planning);
     
         %Extraction process
-    
+        \pause
         \node[below= 6em of ext, xshift = -12em, minimum width = 6em] (sompas) {\textbf{SOMPAS}};
         \node[below=6em of ext, minimum width = 4em] (ssa) {\textbf{SSA}};
         \node[below=6em of ext, xshift = 12em, minimum width = 6em] (chro) {\textbf{Chronicle}};
+        \path[-] (ext.-160) edge (sompas.160);
+        \path[-] (ext.-20) edge (chro.20);
+        \pause
+        \path[->]
+        (sompas) edge
+        node[above, midway] {\footnotesize \textit{SSA translation}} 
+        node[below, midway] {\footnotesize \{translation rules\}}
+        (ssa);
+
+        \pause
+        \path[->] (ssa) edge
+        node[above, midway, align=center] {\footnotesize \textit{chronicle extraction,}\\\footnotesize \textit{post-processing}} 
+        node[below, midway] {\footnotesize \{extraction rules\}}
+        (chro);
+        \pause
         \node[below =2em of sompas] (e1) {\footnotesize(+ x y)};
+        \pause
         \node[below =1em of ssa] (e2) {
         \footnotesize    
         \begin{minipage}{0.3\textwidth}
@@ -318,7 +329,7 @@ at
                 t_4:& r \gets apply(r_1,r_2,r_3)
             \end{flalign*}
         \end{minipage}};
-        
+        \pause
         \node[below =1em of chro, align = left] (e2) {
         \footnotesize    
         \begin{minipage}{\textwidth}
@@ -328,23 +339,48 @@ at
                 r&= r_2 + r_3
             \end{flalign*}
         \end{minipage})};
-        \path[->]
-        (sompas) edge
-        node[above, midway] {\footnotesize \textit{SSA translation}} 
-        node[below, midway] {\footnotesize \{translation rules\}}
-        (ssa)
 
-        (ssa) edge
-        node[above, midway, align=center] {\footnotesize \textit{chronicle extraction,}\\\footnotesize \textit{post-processing}} 
-        node[below, midway] {\footnotesize \{extraction rules\}}
-        (chro);
 
-        \path[-] (ext.-160) edge (sompas.160);
-        \path[-] (ext.-20) edge (chro.20);
+
     \end{tikzpicture}
 \end{frame}
 
-\begin{frame}[c,fragile]{Extraction example of a method}
+\begin{frame}[c,fragile]{Example: the gripper-door problem}
+    \begin{columns}[T]
+        \begin{column}<1->{0.5\textwidth}
+            \centering
+    
+            \begin{overprint}
+                \onslide<1>\includegraphics[width = 0.8\textwidth]{images/3_rooms/gd_3_0.png}
+                \onslide<2>\includegraphics[width = 0.8\textwidth]{images/3_rooms/gd_3_1.png}
+                \onslide<3>\includegraphics[width = 0.8\textwidth]{images/3_rooms/gd_3_3.png}
+                \onslide<4->\includegraphics[width = 0.8\textwidth]{images/3_rooms/gd_3_6.png}
+            \end{overprint}
+        \end{column}
+        \begin{column}<1->{0.5\textwidth}
+            A \textit{robot} needs to place \textit{balls} in different \textit{rooms}
+            \small
+            \onslide<1->
+            \begin{itemize}
+                \item Actions:
+                \onslide<2-> move
+                \onslide<3->, pick
+                \onslide<4-> , drop
+                \onslide<5->
+                \item State-functions:
+                    \begin{itemize}
+                        \item at({ball, robot}) location
+                        \item carry(?ball) gripper
+                        \item connected
+                    \end{itemize}
+                \item Tasks and methods: pick-and-drop(m1, m2), t\_move(m\_recursive, m\_already\_there)   
+            \end{itemize}
+        \end{column}
+        
+    \end{columns} 
+    \end{frame}
+
+\begin{frame}[c,fragile]{Gripper-door: example of the extraction of the descriptive model of a method}
     \small
     Converting a method that:
     \small
@@ -353,7 +389,9 @@ at
     \item check the good position of robby
     \item pick the ball
 \end{itemize}
+\pause
     \begin{columns}[c, T]
+
         \begin{column}{0.32\textwidth}
             Operational model (SOMPAS):
             \tiny
@@ -365,7 +403,7 @@ at
          \end{lstlisting} 
         \end{column}
 
-
+        \pause
         \begin{column}{0.32\textwidth}
             SSA form
             \tiny
@@ -381,6 +419,7 @@ at
             & \dots\\
             \end{align*}
         \end{column}
+        \pause
         \begin{column}{0.32\textwidth}
         Chronicle Template
         
@@ -403,12 +442,13 @@ at
 
 
 
-\begin{frame}[fragile]{SOMPAS primitive task model description in PDDL fashion}
+\begin{frame}[fragile]{Gripper-door: definition of action models in PDDL fashion}
     \small
     \begin{itemize}
         \item Defined with SOMPAS only for planning purpose
         \pause
-        \item \textbf{assert} $\rightarrow$ \textbf{setstate} $\rightarrow$ \textbf{effect} 
+        \item \textbf{assert} primitive to represent effects %$\rightarrow$ \textbf{setstate} $\rightarrow$ \textbf{effect}
+        \pause
     \end{itemize}
     Primitive action move
     \begin{columns}[T] % align columns
@@ -449,12 +489,24 @@ at
     
 \end{frame}
 
-
+\begin{frame}[c, fragile]{Benchmarking gripper-door: problems of different sizes}
+    \begin{columns}[c]
+        \begin{column}[c]{0.3\textwidth}
+            \includegraphics[width = 0.8\textwidth]{images/3_rooms/gd_3_0.png}
+        \end{column}
+        \begin{column}{0.1\textwidth}
+            \centering $\rightarrow$
+        \end{column}
+        \begin{column}[c]{0.5\textwidth}
+            \includegraphics[width = \textwidth, angle=90]{images/11_rooms/gd_11_0.png}
+        \end{column}
+    \end{columns}
+\end{frame}
 
 %gripper door presentation
-\input{sections/gripper_door.tex}
+%\input{sections/gripper_door.tex}
 
-\begin{frame}{Results}
+\begin{frame}{Results for gripper-door}
   
 \pgfplotstableread{datas/gripper_doors.dat}{\table}
 \begin{columns}

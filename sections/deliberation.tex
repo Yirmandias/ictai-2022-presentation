@@ -1,17 +1,17 @@
 \section{Deliberative agent (7 min)}
 
-\begin{frame}{What is an agent}
+\begin{frame}{What is a robotic agent}
 
     \begin{columns}[T]
         \begin{column}{0.3\textwidth}
-            A robotic agent
+            An entity
 
             ~
 
             \includegraphics[width = 0.7\textwidth]{images/icons8-robot-gustav-500.png}
         \end{column}
         \begin{column}{0.7\textwidth}
-            \center capable of :
+            \center Capable of :
             \pause
             \begin{enumerate}
                 \item Perceiving its environment
@@ -29,9 +29,11 @@
 \begin{frame}{Represent the skills of an agent}
 
 \begin{columns}[T]
-    \begin{column}{0.6\textwidth}
+    \begin{column}{0.55\textwidth}
 
         Robot behavior = \textbf{operational model}:
+        \pause
+        \small
         \begin{itemize}
             \item Executable program
             \item General purpose language
@@ -39,9 +41,9 @@
         
         ~
         \pause
-        
+        \normalsize
         Acting domain \textbf{$A_\Delta (A, T, M_t)$}: Hierarchical operational models
-        
+        \small
         \pause
         \begin{itemize}
         
@@ -56,7 +58,8 @@
 
          \textit{\footnotesize(set the table, prepare a coffee)}
          \pause
-         \item[$M_t$] \textit{("Know how")}: methods (operational models)
+         \item[$M_t$] \textit{("Know how")}: methods
+         pre-conditions, body (operational model)
 
          
      \end{itemize}
@@ -64,12 +67,12 @@
     \begin{column}{0.45\textwidth}
         \begin{figure}
             \begin{tikzpicture}
-                \node[draw,ellipse, ultra thick] (t) {\textit{open door}} [sibling distance = 3.25cm]
+                \node[draw,ellipse, ultra thick] (t) {\textit{open door}} [sibling distance = 3.5cm]
                   child {node[draw, ultra thick] (m1) {$m_1$} edge from parent [dashed]
                   child {node[draw,rounded corners, ultra thick, solid] (a1) {$push$} edge from parent
                   }} 
                   child {node[draw, ultra thick] (m2) {$m_2$} edge from parent [dashed] [sibling distance = 1.5cm]
-                  child {node[draw, rounded corners, solid, ultra thick] (a2) {grab wrist} edge from parent [solid]}
+                  child {node[draw, rounded corners, solid, ultra thick] (a2) {grab handle} edge from parent [solid]}
                   child {node[draw, rounded corners, solid, ultra thick] {$pull$} edge from parent [solid]}};
                 \node[right = 0em of t] {$\in T$};
                 \node[right = 0em of m1] {$\in M_t$};
@@ -86,7 +89,7 @@
     
 \end{frame}
 \begin{frame}{Refinement Acting Engine (RAE)\cite{ghallabAutomatedPlanningActing2016} : Deliberation algorithms using hierarchical operational models}
-\begin{columns}
+\begin{columns}[T]
     \begin{column}{0.35\textwidth}
     \pause
     \setlength{\leftmargini}{-1pt}
@@ -97,7 +100,7 @@
     \begin{itemize}
         \item Perform multiple tasks in parallel
         \pause
-        \item Automated deliberation: Refinement of task
+        \item Automated deliberation
         \begin{itemize}
             \setlength{\leftmargini}{-1pt}
             \pause
@@ -121,7 +124,7 @@
                 
                 add it to the \textbf{agenda} (ongoing tasks)
                 \pause
-                \item Refine $tau$: \textbf{Select} an applicable method $m$ for $\tau$
+                \item Refine $\tau$: \textbf{Select} an applicable method $m$ for $\tau$
                 \pause
                 \item \textbf{Progress} $m$
             \end{itemize}
@@ -199,7 +202,7 @@
 \pause
     Descriptive models shortcomings:
     \begin{itemize}
-        \item Made limited dedicated languages: PDDL \cite{foxPDDL2ExtensionPDDL2003}, ANML \cite{smith2008anml},\dots
+        \item Made limited dedicated languages: PDDL \cite{foxPDDL2ExtensionPDDL2003}, HDDL \cite{hollerHDDLExtensionPDDL2020}, ANML \cite{smith2008anml},\dots
         \item operational model $\not\equiv$ descriptive model $\rightarrow$ Harder design
     \end{itemize}
 
