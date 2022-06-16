@@ -1,4 +1,4 @@
-\section{OMPAS : RAE guided by planning (9 min)}
+\section{OMPAS : RAE guided by planning}
 \begin{frame}{A new RAE implementation}
 
     Assets:
@@ -97,9 +97,8 @@
         \pause
         \item applicability $\rightarrow$ pre-conditions($\xi$)
         \pause
-        \item future choices \textbf{(instantiating, refinement)}
+        \item informed choice that accounts for long terms impacts
         \pause
-        $\rightarrow$ embedded in operational models
         \item primitives tasks outcome $\rightarrow$ platform model
     \end{itemize}
 \end{frame}
@@ -177,7 +176,7 @@
         \node[yshift = 1.5em, xshift = -12em] (t3) {\textbf{State, Task instance}};
         \node[yshift = -1.5em, xshift = -12em] (t4) {\textbf{$P_\Delta$}};
         \draw[-latex, ultra thick] (-6,0)--(F.west);
-        \node[xshift = 15em] (t5) {\textbf{Hierarchical Plan}};
+        \node[xshift = 12em] (t5) {\textbf{Hierarchical Plan}};
         \node[below=3em of t5, align = center] (t6) {Methods for every tasks\\
         Actions ordering};
         \node[below=2em of t4, align =left] (t7) {Descriptive models of:\\
@@ -195,7 +194,7 @@
 \lstset{basicstyle=\tiny, columns=fullflexible}
 
 
-\begin{frame}[fragile]{Defining $A_\Delta$ with Scheme OMPAS (SOMPAS)}
+\begin{frame}[t,fragile]{Defining $A_\Delta$ with Scheme OMPAS (SOMPAS)}
     \setlength{\leftmargini}{0pt}
     \begin{columns}
         \begin{column}{0.5\textwidth}
@@ -248,6 +247,7 @@ at
                 \end{lstlisting}
             \end{itemize}
 
+    \pause
             ~
         \normalsize
         Others:
@@ -301,6 +301,7 @@ at
         \pause
         \node[below= 6em of ext, xshift = -12em, minimum width = 6em] (sompas) {\textbf{SOMPAS}};
         \node[below=6em of ext, minimum width = 4em] (ssa) {\textbf{SSA}};
+        \node[below=0em of ssa, align = center] {\scriptsize (lower level\\ \scriptsize formalism)};
         \node[below=6em of ext, xshift = 12em, minimum width = 6em] (chro) {\textbf{Chronicle}};
         \path[-] (ext.-160) edge (sompas.160);
         \path[-] (ext.-20) edge (chro.20);
@@ -345,9 +346,16 @@ at
     \end{tikzpicture}
 \end{frame}
 
-\begin{frame}[c,fragile]{Example: the gripper-door problem}
-    \begin{columns}[T]
-        \begin{column}<1->{0.5\textwidth}
+\begin{frame}{Summary of the proposal}
+    \begin{itemize}
+        \item RAE with task refinement guided by planning;
+        \item Extraction of the planning domain (chronicle) from the acting domain and \textbf{platform model}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Example: the gripper-door problem}
+    \begin{columns}[c]
+        \begin{column}{0.3\textwidth}
             \centering
     
             \begin{overprint}
@@ -357,7 +365,7 @@ at
                 \onslide<4->\includegraphics[width = 0.8\textwidth]{images/3_rooms/gd_3_6.png}
             \end{overprint}
         \end{column}
-        \begin{column}<1->{0.5\textwidth}
+        \begin{column}<1->{0.7\textwidth}
             A \textit{robot} needs to place \textit{balls} in different \textit{rooms}
             \small
             \onslide<1->
@@ -365,20 +373,47 @@ at
                 \item Actions:
                 \onslide<2-> move
                 \onslide<3->, pick
-                \onslide<4-> , drop
+                \onslide<4->, drop
                 \onslide<5->
                 \item State-functions:
-                    \begin{itemize}
-                        \item at({ball, robot}) location
-                        \item carry(?ball) gripper
-                        \item connected
-                    \end{itemize}
-                \item Tasks and methods: pick-and-drop(m1, m2), t\_move(m\_recursive, m\_already\_there)   
+                \begin{itemize}
+                    \item at(\{ball, robot\}) $\rightarrow$ loc
+                    \item carry(gripper) $\rightarrow$ ball
+                    \item connected(loc, loc) $\rightarrow$ bool
+                \end{itemize}
+                \onslide<6->
+                \item Tasks and methods:
+                
+                \begin{tikzpicture}
+                    \node(t1) {\textit{pick-and-drop}};
+                    \node[below = 1em of t1] (m) {m};
+                    \node[below = 1em of m, xshift = -4em] (s1) {$t_{move}$};
+                    \node[below = 1em of m, xshift = -1.5em] (s2) {\textbf{pick}};
+                    \node[below = 1em of m, xshift = 1.5em] (s3) {$t_{move}$};
+                    \node[below = 1em of m, xshift = 4em] (s4) {\textbf{drop}};
+                    \path[-] (t1) edge (m)
+                     (m) edge (s1)
+                     (m) edge (s2)
+                     (m) edge (s3)
+                     (m) edge (s4);
+                    \onslide<7->
+                     \node[right = 6em of t1] (t2) {$t_{move}$};
+                    \node[below = 1em of t2, xshift= -1.5em] (m1) {$m_{noop}$};
+                    \node[below = 1em of t2, xshift = 1.5em] (m2) {$m_r$};
+                    \node[below = 1em of m2, xshift = -1.5em] (s5) {\textbf{move}};
+                    \node[below = 1em of m2, xshift = 1.5em] (s6) {$t_{move}$};
+
+                    \path[-] (t2) edge (m1)
+                     (t2) edge (m2)
+                     (m2) edge (s5)
+                     (m2) edge (s6);
+                \end{tikzpicture} 
             \end{itemize}
         \end{column}
         
     \end{columns} 
     \end{frame}
+
 
 \begin{frame}[c,fragile]{Gripper-door: example of the extraction of the descriptive model of a method}
     \small
@@ -427,8 +462,7 @@ at
 \begin{align*}
     variables: \{&s,e,?ball,?gripper,\\
     &r_1,r_2,r_3,r_4,t_1,t_2\} \\
-    constraints : \{ &r_1 = r_2, r_3 \neq r_4, \\
-        & s \leq t_1 \leq t_2 \leq e \}\\
+    constraints : \{ &r_3 = r_4, s \leq t_1 \leq t_2 \leq e \}\\
     conditions : \{&[s,s]~(at\ ?ball) = r_1 \\
         &[s,s]~(at\text{-}robby) = r_2 \\
         &[t_2,t_2]~(at\text{-}robby) = r_3 \\
@@ -442,7 +476,7 @@ at
 
 
 
-\begin{frame}[fragile]{Gripper-door: definition of action models in PDDL fashion}
+\begin{frame}[fragile]{Gripper-door: platform model in PDDL fashion}
     \small
     \begin{itemize}
         \item Defined with SOMPAS only for planning purpose
@@ -459,10 +493,9 @@ at
             \begin{lstlisting}
 (def-action-model move
  '((:params (?from room) (?to room))
-   (:pre-conditions (and-cond 
+   (:pre-conditions  
      (= (at-robby) ?from)
      (!= ?from ?to))
-     (= (connected ?from ?to) yes))
    (:effects
      (begin
        (assert 'at-robby ?to)))))
@@ -477,11 +510,11 @@ at
             %task :(&move\ ?from\ ?to)\\
             variables: \{&?from, ?to, s, e, p, r1,r2,r3,r\}\\
             constraints: \{&r = true, r1 = room, r2 = room\\
-                & r3 = ?from, ?from != ?to, s < e \}\\
+                & r3 = ?from, ?from \neq ?to, s < e \}\\
             condition:\{&[s,s]\ instance(?from) = r1 \\
                 &[s,s]\ instance(?to) = r2\\
                 &[s,s]\ \text{at-robby} = r3 \}\\
-            effects:\{&[e,e]\ \text{at-robby} \leftarrow ?to\} \\
+            effects:\{&[e,e]\ \text{at-robby} \gets ?to\} \\
             subtasks:& \emptyset
             \end{align*}
         \end{column}
@@ -515,6 +548,7 @@ at
         
         Greedy, Aries, Optimal Aries (Aries-opt)
     \end{column}
+    \pause
 
     \begin{column}{0.45\textwidth}
         Metrics in function of the number of room:

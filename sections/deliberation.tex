@@ -1,4 +1,4 @@
-\section{Deliberative agent (7 min)}
+\section{Deliberative agent}
 
 \begin{frame}{What is a robotic agent}
 
@@ -26,44 +26,37 @@
  
 \end{frame}
 
-\begin{frame}{Represent the skills of an agent}
+\begin{frame}{Skills of an agent}
 
 \begin{columns}[T]
     \begin{column}{0.55\textwidth}
 
-        Robot behavior = \textbf{operational model}:
-        \pause
-        \small
         \begin{itemize}
-            \item Executable program
-            \item General purpose language
+            \item basic capabilities : move, grasp, look, \dots
+            \pause
+            \item skills : executable program made of lower level capabilities,
+            (operational model)
+            \pause
+            \item Robot behavior = composition of skills
         \end{itemize}
         
         ~
         \pause
-        \normalsize
         Acting domain \textbf{$A_\Delta (A, T, M_t)$}: Hierarchical operational models
         \small
         \pause
         \begin{itemize}
         
         
-         \item[$A$] \textit{(low-level skills)}: primitive tasks
+         \item[$A$] : primitive tasks
          \pause
-         
-         \textit{\footnotesize(move, grasp, look)}
+         \item[$T$] : abstract tasks
          \pause
-         \item[$T$] \textit{(high-level skills)}: abstract tasks
-         \pause
-
-         \textit{\footnotesize(set the table, prepare a coffee)}
-         \pause
-         \item[$M_t$] \textit{("Know how")}: methods
-         pre-conditions, body (operational model)
-
+         \item[$M_t$] : methods: pre-conditions, body (operational model)
          
      \end{itemize}
     \end{column}
+    \pause
     \begin{column}{0.45\textwidth}
         \begin{figure}
             \begin{tikzpicture}
@@ -88,72 +81,133 @@
 \end{columns}
     
 \end{frame}
-\begin{frame}{Refinement Acting Engine (RAE)\cite{ghallabAutomatedPlanningActing2016} : Deliberation algorithms using hierarchical operational models}
-\begin{columns}[T]
-    \begin{column}{0.35\textwidth}
-    \pause
-    \setlength{\leftmargini}{-1pt}
-    %\setlength{\parsep}{1pt}
-    %\setlength{\parskip}{0pt}
+
+\begin{frame}{Refinement Acting Engine (RAE)\footnote{Automated Planning and acting \cite{ghallabAutomatedPlanningActing2016}}: Deliberation algorithms using hierarchical operational models}
     RAE features:
-    \small
     \begin{itemize}
         \item Perform multiple tasks in parallel
         \pause
-        \item Automated deliberation
-        \begin{itemize}
-            \setlength{\leftmargini}{-1pt}
-            \pause
-            \item Refinement of task into a method
-            \pause
-            \item Instantiating of \textbf{arbitrary} variables
-        \end{itemize}
+        \item Automated deliberation: Refinement of task into method and choice of parameters
     \end{itemize}
-    \end{column}
-    \begin{column}{0.65\textwidth}
+    \centering
+    \begin{tikzpicture}
+        \node[] (task) {$\tau(p_1,\dots,p_n)$};
+        \node[below = 2em of task] (method) {$m(p_1,\dots,p_n, \dots, p_m)$};
+        \path[->] (task) edge node[right, midway] {refinement} (method);
+    \end{tikzpicture}
         
-        \pause
-        Algorithms:
-        \small
-        \pause
-        \begin{itemize}
-            \setlength{\leftmargini}{-1pt}
-            \item \textbf{Main:} 
+\end{frame}
+    
+
+\begin{frame}{Refinement Acting Engine (RAE)\cite{ghallabAutomatedPlanningActing2016} : Deliberation algorithms using hierarchical operational models}
+    \begin{columns}[T]
+  
+        \begin{column}{0.65\textwidth}
+            
+            Algorithms:
+            \small
             \begin{itemize}
-                \item Receive $\tau$ (task or event);
-                
-                add it to the \textbf{agenda} (ongoing tasks)
-                \pause
-                \item Refine $\tau$: \textbf{Select} an applicable method $m$ for $\tau$
-                \pause
-                \item \textbf{Progress} $m$
-            \end{itemize}
-            \pause
-            \item \textbf{Progress:}
+                \setlength{\leftmargini}{-1pt}
+                \onslide<2->
+                \item \textbf{Main:} 
                 \begin{itemize}
-                \pause
-                    \item Monitor execution of $m$.
-                \pause
-                    \item Refine subtasks in $m$.    
-                \pause
-                    \item Monitor execution of subtasks.
-                \pause
-                    \item \textbf{Retry} $\tau$ in case of \emph{failure}:
-                
-                Call \textbf{Select} to get a new method;
-                
-                \textbf{Progress} the new method.
+                    \item Receive $\tau$ (task or event);
+                    
+                    add it to the \textbf{agenda} (ongoing tasks)
+                    \onslide<3->
+                    \item Refine $\tau$: \textbf{Select} an applicable method $m$ for $\tau$
+                    \onslide<4->
+                    \item \textbf{Progress} $m$
                 \end{itemize}
-                \pause
-        \end{itemize}
-    \end{column}
-\end{columns}
+                \onslide<5->
+                \item \textbf{Progress:}
+                    \begin{itemize}
+                        \onslide<6->
+                        \item Monitor execution of $m$.
+                        \onslide<7->
+                        \item Refine subtasks in $m$.    
+                        \onslide<8->
+                        \item Monitor execution of subtasks.
+                        \onslide<9->
+                        \item \textbf{Retry} $\tau$ in case of \emph{failure}:
+                    
+                    Call \textbf{Select} to get a new method;
+                    
+                    \textbf{Progress} the new method.
+                    \end{itemize}
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.35\textwidth}
+            \begin{tikzpicture}
+                \onslide<2>
+                \node[draw,ellipse, ultra thick] (t) {$\tau$};
+                \onslide<3-9>
+                \node[draw,ellipse, ultra thick, color = orange] (t) {$\tau$};
+                \onslide<10>
+                \node[draw,ellipse, ultra thick, color = green] (t) {$\tau$};
+                \onslide<3>
+                \node[draw, ultra thick, below= 2em of t, xshift = -3em] (m1) {$m_1$};
+                \node[draw, ultra thick, below= 2em of t, xshift = 3em] (m2) {$m_2$};
+                \onslide<4->
+                \node[draw, ultra thick, below= 2em of t, xshift = -3em, color = orange] (m1) {$m_1$};
+                \node[draw, ultra thick, below= 2em of t, xshift = 3em, color = gray] (m2) {$m_2$};
+                \onslide<10>
+                \node[draw, ultra thick, below= 2em of t, xshift = -3em, color = green] (m1) {$m_1$};
+                \onslide<3->
+                \path[-] (t) edge (m1) (t) edge (m2);
+                \onslide<5>
+                \node[draw,rounded corners, ultra thick, solid, below = 2em of m1, xshift = -1.5em] (a1) {$a1$};
+                \onslide<6>
+                \node[draw,rounded corners, ultra thick, solid, below = 2em of m1, xshift = -1.5em, color = orange] (a1) {$a1$};
+                \onslide<7->
+                \node[draw,rounded corners, ultra thick, solid, below = 2em of m1, xshift = -1.5em, color = green] (a1) {$a1$};
+                \onslide<5-7>
+                \node[draw,ellipse, ultra thick, solid, below = 2em of m1, xshift = 1.5em] (t2) {$\tau_s$};
+                \onslide<8->
+                \node[draw,ellipse, ultra thick, solid, below = 2em of m1, xshift = 1.5em, color = orange] (t2) {$\tau_s$};
+                \onslide<10>
+                \node[draw,ellipse, ultra thick, solid, below = 2em of m1, xshift = 1.5em, color = green] (t2) {$\tau_s$};
+  
+  
+                \onslide<5->
+                \path[-] (m1) edge (a1) (m1) edge(t2);
+  
+  
+                \onslide<7>
+                \node[draw, ultra thick, below = 2em of t2, xshift = -1.5em] (m3) {$m_3$};
+                \node[draw, ultra thick, below = 2em of t2, xshift = 1.5em] (m4) {$m_4$};
+                \path[-] (t2) edge  (m3) (t2) edge (m4);
+                
+                \onslide<8>
+                \node[draw, ultra thick, below = 2em of t2, xshift = -1.5em, color = orange] (m3) {$m_3$};
+                \node[draw, ultra thick, below = 2em of t2, xshift = 1.5em, color = gray] (m4) {$m_4$};
+                \path[-] (t2) edge  (m3) (t2) edge (m4);
+  
+                \onslide<9->
+                \node[draw, ultra thick, below = 2em of t2, xshift = -1.5em, color = red] (m3) {$m_3$};
+                \node[draw, ultra thick, below = 2em of t2, xshift = 1.5em, color = orange] (m4) {$m_4$};
+                \path[-] (t2) edge  (m3) (t2) edge (m4);
+                \onslide<10>
+                \node[draw, ultra thick, below = 2em of t2, xshift = 1.5em, color = green] (m4) {$m_4$};
+                
+                \onslide<8->
+                \node[below = 2em of m3, xshift = -1em] (e3) {};
+                \node[below = 2em of m3, xshift = 1em] (e4) {};
+                \path[-] (m3) edge  (e3) (m3) edge (e4);
+  
+                \onslide<8->
+                \node[below = 2em of m4, xshift = -1em] (e5) {};
+                \node[below = 2em of m4, xshift = 1em] (e6) {};
+                \path[-] (m4) edge  (e5) (m4) edge (e6);
+      
+            \end{tikzpicture}
+        \end{column}
+    \end{columns}
 
     
 \end{frame}
 
 \begin{frame}{Improve the refinement using planning}
-    \begin{center}
         
     Role of Select:
 
@@ -166,29 +220,28 @@
         rounded corners,
         text = black,
         align=center,] (F) at (0,0) {\textbf{Select}};
-        
-    \node[left= 2em of F] (i) {\textbf{$\tau(p_1,\dots,p_n), \xi (state)$}};
-    \node[right= 2em of F] (o) {\textbf{$m(p_1, \dots, p_n,\dots,p_m)$}};
+    \node[left = 8em of F] (p1) {};
+
+    \node[right= 2em of F] (o) {get-and-bring(fork, kitchen, robby)};
     \path[->]
-    (i) edge (F)
+    (p1) edge node[midway, above] {bring(fork, kitchen)} node[midway, below] {$\xi$ \textit{(state)}}(F)
     (F) edge (o);
 
     \end{tikzpicture}
     
 
     %$Select(\tau, p_1,\dots,p_n) \rightarrow \{m_s, p_1, \dots, p_n,\dots,p_m\}$
-    \end{center}
 
     \pause
     Techniques:
     \begin{itemize}
 
-    \item Greedy (Basic RAE functioning): arbitrary applicable method
+    \item Greedy (basic RAE functioning): arbitrary applicable method
     \pause
     
-    \underline{Problem:} Does not take into account future refinements (can lead into dead-locks)
+    \underline{Problem:} Does not take into account long term impacts (can lead into dead-locks)
     \pause
-    \item \textbf{look-ahead(planning)} : capacity to project the system from the current state to possible future state
+    \item \textbf<5->{look-ahead(planning)} : capacity to project the system from the current state to possible future state
 
     \end{itemize}
 \end{frame}
@@ -197,7 +250,7 @@
     Requires:
     \begin{itemize}
         \item A planner
-        \item Descriptive model of the agent skills : describes the set of states that may result from performing tasks.
+        \item Descriptive models of the agent skills : describe the set of states that may result from performing tasks.
     \end{itemize} 
 \pause
     Descriptive models shortcomings:
@@ -216,7 +269,7 @@
     \end{tikzpicture}
 
     \pause
-    Plan with \textbf{Aries} (hierarchical LCP\cite{bit-monnotConstraintBasedEncodingDomainIndependent2018} extension):
+    Plan with a hierarchical temporal planner
 
 \end{frame}
 
@@ -250,7 +303,7 @@
 
 \begin{frame}{Synthesis of the proposition}
         \centering
-        Task refinement guided by planning:
+        RAE with task refinement guided by planning:
 
         ~
         
@@ -263,10 +316,10 @@
             rounded corners,
             right = 6em of select,
             minimum width = 5em,
-            minimum height = 3em] (aries) {\LARGE Aries};
+            minimum height = 3em] (aries) {\LARGE Planner};
             \path[->, every node/.style={font=\sffamily\small}]
-            (select) edge[bend right] node [right, below] {$P_\Delta, t(p_1,\dots,p_n)$} (aries)
-            (aries) edge[bend right] node [right, above] {$Plan(m_s, m_2,\dots,m_n)$} (select)
+            (select) edge[bend left] node [right, above] {$P_\Delta, \tau(p_1,\dots,p_n)$} (aries)
+            (aries) edge[bend left] node [right, below] {$Plan(m_s, m_2,\dots,m_n)$} (select)
             ;
         \end{tikzpicture}
 
