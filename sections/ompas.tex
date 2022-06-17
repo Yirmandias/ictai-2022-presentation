@@ -191,6 +191,21 @@
 \end{frame}
 
 
+\begin{frame}{Little summary}
+    What has been presented so far:
+    \begin{itemize}
+        \item OMPAS: A new RAE implementation
+        \item Select using a hierarchical temporal planner
+    \end{itemize}
+
+    Now:
+    \begin{itemize}
+        \item Acting language from which we can extract chronicles
+        \item An example using planning
+    \end{itemize}
+\end{frame}
+
+
 \lstset{basicstyle=\tiny, columns=fullflexible}
 
 
@@ -346,12 +361,6 @@ at
     \end{tikzpicture}
 \end{frame}
 
-\begin{frame}{Summary of the proposal}
-    \begin{itemize}
-        \item RAE with task refinement guided by planning;
-        \item Extraction of the planning domain (chronicle) from the acting domain and \textbf{platform model}
-    \end{itemize}
-\end{frame}
 
 \begin{frame}[fragile]{Example: the gripper-door problem}
     \begin{columns}[c]
@@ -366,7 +375,7 @@ at
             \end{overprint}
         \end{column}
         \begin{column}<1->{0.7\textwidth}
-            A \textit{robot} needs to place \textit{balls} in different \textit{rooms}
+            \textit{Robby} needs to place \textit{balls} in different \textit{rooms}
             \small
             \onslide<1->
             \begin{itemize}
@@ -377,7 +386,8 @@ at
                 \onslide<5->
                 \item State-functions:
                 \begin{itemize}
-                    \item at(\{ball, robot\}) $\rightarrow$ loc
+                    \item at-robby(robot) $\rightarrow$ loc
+                    \item at(ball) $\rightarrow$ loc
                     \item carry(gripper) $\rightarrow$ ball
                     \item connected(loc, loc) $\rightarrow$ bool
                 \end{itemize}
