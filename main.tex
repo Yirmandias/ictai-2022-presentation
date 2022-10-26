@@ -1,4 +1,4 @@
-\documentclass[c,english]{beamer}
+\documentclass[handout, c,english]{beamer}
 \usetheme{Frankfurt}
 \usepackage[utf8]{inputenc}
 \usepackage{natbib}
@@ -11,23 +11,19 @@
 \usepackage[noend]{algpseudocode}
 \usepackage{pgfplots}
 \usepackage{comment}
+\usepackage{todonotes}
 
 %animations (for gifs)
 \usepackage{animate}
+
+%used to plot results
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
 
 %customize itemize
 \usetikzlibrary{positioning,calc,intersections,shapes.geometric}
 
 \setbeamertemplate{footline}[frame number]
-
-
-%New commands for the SSA form
-\newcommand{\ssa}[1]{\begin{align*}#1\end{align*}}
-\newcommand{\cst}{\textit{cst}}
-\newcommand{\readstate}{\textit{read-state}}
-\newcommand{\setstate}{\textit{set-state}}
-\newcommand{\exectask}{\textit{exec-task}}
-\newcommand{\apply}{\textit{apply}}
 
 
 \title{IEEE ICTAI 2022}
@@ -56,7 +52,6 @@ jeremy.turi@laas.fr, abitmonnot@laas.fr}
   \end{frame}
 }
 
-
 \input{sections/context.tex}
 \input{sections/motivation.tex}
 \input{sections/contribution.tex}
@@ -68,7 +63,7 @@ jeremy.turi@laas.fr, abitmonnot@laas.fr}
 \begin{frame}[allowframebreaks]
   \frametitle{References}
   \bibliographystyle{plain}
-  \bibliography{biblio}
+  \bibliography{ictai-2022}
 \end{frame}
 
 
