@@ -16,12 +16,19 @@
 %animations (for gifs)
 \usepackage{animate}
 
+%for figures
+\usepackage{tikz}
+\usetikzlibrary{positioning,calc,intersections, shapes.geometric, fit, backgrounds}
+
 %used to plot results
 \usepackage{pgfplots}
 \usepackage{pgfplotstable}
 
-%customize itemize
-\usetikzlibrary{positioning,calc,intersections,shapes.geometric}
+
+%for subfigures
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{amssymb}
 
 \setbeamertemplate{footline}[frame number]
 
@@ -52,9 +59,8 @@ jeremy.turi@laas.fr, abitmonnot@laas.fr}
   \end{frame}
 }
 
-\input{sections/context.tex}
-\input{sections/motivation.tex}
-\input{sections/contribution.tex}
+\input{sections/introduction.tex}
+\input{sections/core.tex}
 \input{sections/experimental-results.tex}
 \input{sections/conclusion.tex}
 %\input{sections/introduction.tex}
