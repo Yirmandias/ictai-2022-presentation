@@ -1,6 +1,39 @@
-\section{Implementation with a job shop acting simulator}
-\begin{frame}{Validation on a factory simulator with job shop like problems}
-   
+\section{Results for a logistic simulator}
+
+
+\begin{frame}[fragile]{OMPAS models for GobotSim}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item High-level goal: process all packages in the environment
+                \item Body of the unique method of the high-level task.
+                \setlength{\leftmargini}{0pt}
+    
+                \tiny
+            \begin{lstlisting}
+    (do
+    (mapf new-resource (instance robot))
+    (mapf new-resource (instance machine))
+    (define h1 (async (t_process_packages)))
+    (define h2 (async (t_check_rob_bat)))
+    (await h1))
+            \end{lstlisting}    
+            \end{itemize}
+    
+    
+            
+        \end{column}
+        \begin{column}{0.5\textwidth}
+    Role of the acting engine : 
+    \begin{itemize}
+    \item Schedule package passage on machines
+    \item Allocate package displacement tasks to robots
+    \item Monitor the robots' batteries 
+    \end{itemize} 
+    \end{column}
+    \end{columns}
+    
+    \end{frame}
 
 \begin{frame}{Validation on Job shop problems}
 \centering

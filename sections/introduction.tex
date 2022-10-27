@@ -6,20 +6,22 @@
 \begin{columns}
     \begin{column}{0.5\textwidth}
         Deliberation techniques applied to robotics:
+        \small
         \begin{itemize}
             \item Hierarchical and temporal planning techniques.
             \item Robotic architecture.
             \item Cooperation in complex and large environment.
         \end{itemize}
-    \end{column}
-    \begin{column}{0.5\textwidth}
         Focus on deliberation in logistic problems: 
+        \small
         \begin{itemize}
             \item Scheduling,
             \item Robot control,
             \item Fleet Management,
             \item Resource allocation.
         \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
         \includegraphics[width = \textwidth]{images/logisticsolutions.jpg}
     \end{column}
 \end{columns}
@@ -30,14 +32,49 @@
     GobotSim: A new simulator for logistic problems.
     \begin{columns}
         \begin{column}{0.5\textwidth}
+            \includegraphics[width=\linewidth]{images/gobot-rae.png}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            Emphasis on
+            \begin{itemize}
+                \item Deliberation aspects
+                \item Logistic problematics: scheduling, resource
+            \end{itemize}
             Compaired to existing simulators:
             \begin{itemize}
                 \item RoboCup: Manipulation, cooperation
                 \item Craft-bots: Exploration, resource gathering
             \end{itemize}
         \end{column}
-        \begin{column}{0.5\textwidth}
-            Environment: 
+    \end{columns}
+\end{frame}
+
+\begin{frame}{GobotSim environment}
+    \begin{columns}
+        \begin{column}{0.2\textwidth}
+            \includegraphics[width = 0.8\textwidth]{images/godot/machine_texture.png}
+        \end{column}
+        \begin{column}{0.7\textwidth}
+            Machines
+            \begin{itemize}
+                \item Processing : does a predefined list of process for packages
+                \item Input: generate packages
+                \item Output: gather fully processed packages
+            \end{itemize}
+
+        \end{column}
+    \end{columns}
+
+    \begin{columns}
+        \begin{column}{0.2\textwidth}
+            \includegraphics[width = 0.8\textwidth]{images/godot/robot_texture.png}
+        \end{column}
+        \begin{column}{0.7\textwidth}
+            Robots : manipulate packages
+            \begin{itemize}
+                \item commands: move, pick, place,\dots
+                \item recharge at recharge areas
+            \end{itemize}
         \end{column}
     \end{columns}
 \end{frame}
@@ -50,69 +87,7 @@
 
 \input{sections/multi-agent.tex}
 
-\begin{frame}{GobotSim environment}
-\begin{columns}
-\begin{column}{0.4\textwidth}
-    \begin{figure}[tp]
-        \includegraphics[width=\linewidth]{images/gobot-rae.png}
-    \end{figure}
-\end{column}
-\begin{column}{0.5\textwidth}
-    Machines
-    \begin{itemize}
-        \item Processing : does a predefined list of process for packages
-        \item Input: generate packages
-        \item Output: gather fully processed packages
-    \end{itemize}
-    Robots : manipulate packages
-    \begin{itemize}
-        \item commands: move, pick, place,\dots
-        \item recharge at recharge areas
-    \end{itemize}
-\end{column}
-\end{columns}
-\end{frame}
-
-\begin{frame}[fragile]{OMPAS models for GobotSim}
-\begin{columns}
-    \begin{column}{0.5\textwidth}
-        \begin{itemize}
-            \item High-level goal: process all packages in the environment
-            \item Body of the unique method of the high-level task.
-            \setlength{\leftmargini}{0pt}
-
-            \tiny
-        \begin{lstlisting}
-(do
-(mapf new-resource (instance robot))
-(mapf new-resource (instance machine))
-(define h1 (async (t_process_packages)))
-(define h2 (async (t_check_rob_bat)))
-(await h1))
-        \end{lstlisting}    
-        \end{itemize}
 
 
-        
-    \end{column}
-    \begin{column}{0.5\textwidth}
-Role of the acting engine : 
-\begin{itemize}
-\item Schedule package passage on machines
-\item Allocate package displacement tasks to robots
-\item Monitor the robots' batteries 
-\end{itemize} 
-\end{column}
-\end{columns}
-
-\end{frame}
 
 
-\begin{frame}{The scope of the paper}
-    Adaptation of a Refinement acting engine (RAE) for multi-agents to
-    \begin{itemize}
-        \item Deal with concurrency
-        \item Improve the interleaving of parallel tasks
-        \item Reason on shared resources to optimize the overall process
-    \end{itemize}
-\end{frame}
