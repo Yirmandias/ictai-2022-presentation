@@ -1,68 +1,6 @@
 \section{Implementation with a job shop acting simulator}
 \begin{frame}{Validation on a factory simulator with job shop like problems}
-    Proposition of a new simulation environment for acting problems: GobotSim
-    \begin{itemize}
-        \item Simpler than RoboCup
-        \item Differs from Craft-bots by targeting job shop problems with scheduling and resource management problematics.
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{GobotSim environment}
-\begin{columns}
-    \begin{column}{0.4\textwidth}
-        \begin{figure}[tp]
-            \includegraphics[width=\linewidth]{images/gobot-rae.png}
-        \end{figure}
-    \end{column}
-    \begin{column}{0.5\textwidth}
-        Machines
-        \begin{itemize}
-            \item Processing : does a predefined list of process for packages
-            \item Input: generate packages
-            \item Output: gather fully processed packages
-        \end{itemize}
-        Robots : manipulate packages
-        \begin{itemize}
-            \item commands: move, pick, place,\dots
-            \item recharge at recharge areas
-        \end{itemize}
-    \end{column}
-\end{columns}
-\end{frame}
-
-\begin{frame}[fragile]{OMPAS models for GobotSim}
-    \begin{columns}
-        \begin{column}{0.5\textwidth}
-            \begin{itemize}
-                \item High-level goal: process all packages in the environment
-                \item Body of the unique method of the high-level task.
-                \setlength{\leftmargini}{0pt}
-
-                \tiny
-            \begin{lstlisting}
-(do
-    (mapf new-resource (instance robot))
-    (mapf new-resource (instance machine))
-    (define h1 (async (t_process_packages)))
-    (define h2 (async (t_check_rob_bat)))
-    (await h1))
-            \end{lstlisting}    
-            \end{itemize}
-    
-
-            
-        \end{column}
-        \begin{column}{0.5\textwidth}
-Role of the acting engine : 
-\begin{itemize}
-    \item Schedule package passage on machines
-    \item Allocate package displacement tasks to robots
-    \item Monitor the robots' batteries 
-\end{itemize} 
-    \end{column}
-    \end{columns}
-    
-\end{frame}
+   
 
 \begin{frame}{Validation on Job shop problems}
 \centering

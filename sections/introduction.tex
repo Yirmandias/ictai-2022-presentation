@@ -1,66 +1,115 @@
 \section{Introduction}
+\subsection{Deliberation for logistic}
 
-\begin{frame}{The authors}
-    \begin{columns}
-        \begin{column}{0.5\textwidth}
-            Jérémy Turi
-            \includegraphics[width = 0.7\textwidth]{images/jeremy.jpeg}
-            \begin{itemize}
-                \item PhD Student at LAAS-CNRS
-                \item Teacher at INSA Toulouse
-            \end{itemize}
-        \end{column}
-        \begin{column}{0.5\textwidth}
-            Dr. Arthur Bit-Monnot
-            \includegraphics[width = 0.7\textwidth]{images/arthur.jpg}
-            \begin{itemize}
-                \item Researcher at LAAS-CNRS
-                \item Associate Professor at INSA Toulouse
-            \end{itemize}
-        \end{column}
-    \end{columns}
-\centering    
-\end{frame}
-
-\begin{frame}{The research team}
-\centering
-    Robotics and Interactions (RIS) team:
-    
-    ~~
-
+\begin{frame}{Scientific interests of the authors}
+    \centering
 \begin{columns}
     \begin{column}{0.5\textwidth}
-\begin{itemize}
-    \item Human Robot Interaction
-    \item Drones
-    \item Deliberation algorithm: planning, acting, \dots
-    \item Robotics architecture
-\end{itemize}
+        Deliberation techniques applied to robotics:
+        \begin{itemize}
+            \item Hierarchical and temporal planning techniques.
+            \item Robotic architecture.
+            \item Cooperation in complex and large environment.
+        \end{itemize}
     \end{column}
     \begin{column}{0.5\textwidth}
-        \includegraphics[width=\textwidth]{images/RIS-robot-banner.jpg}
+        Focus on deliberation in logistic problems: 
+        \begin{itemize}
+            \item Scheduling,
+            \item Robot control,
+            \item Fleet Management,
+            \item Resource allocation.
+        \end{itemize}
+        \includegraphics[width = \textwidth]{images/logisticsolutions.jpg}
     \end{column}
 \end{columns}
 
 \end{frame}
-\begin{frame}{Scientific interests of the authors}
-    \centering
 
+\begin{frame}{Factory simulator for logistic problems}
+    GobotSim: A new simulator for logistic problems.
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            Compaired to existing simulators:
+            \begin{itemize}
+                \item RoboCup: Manipulation, cooperation
+                \item Craft-bots: Exploration, resource gathering
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            Environment: 
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\subsection{Single agent scenario}
+
+\input{sections/single-agent.tex}
+
+\subsection{Multi-agent scenario}
+
+\input{sections/multi-agent.tex}
+
+\begin{frame}{GobotSim environment}
+\begin{columns}
+\begin{column}{0.4\textwidth}
+    \begin{figure}[tp]
+        \includegraphics[width=\linewidth]{images/gobot-rae.png}
+    \end{figure}
+\end{column}
+\begin{column}{0.5\textwidth}
+    Machines
+    \begin{itemize}
+        \item Processing : does a predefined list of process for packages
+        \item Input: generate packages
+        \item Output: gather fully processed packages
+    \end{itemize}
+    Robots : manipulate packages
+    \begin{itemize}
+        \item commands: move, pick, place,\dots
+        \item recharge at recharge areas
+    \end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{OMPAS models for GobotSim}
+\begin{columns}
+    \begin{column}{0.5\textwidth}
+        \begin{itemize}
+            \item High-level goal: process all packages in the environment
+            \item Body of the unique method of the high-level task.
+            \setlength{\leftmargini}{0pt}
+
+            \tiny
+        \begin{lstlisting}
+(do
+(mapf new-resource (instance robot))
+(mapf new-resource (instance machine))
+(define h1 (async (t_process_packages)))
+(define h2 (async (t_check_rob_bat)))
+(await h1))
+        \end{lstlisting}    
+        \end{itemize}
+
+
+        
+    \end{column}
+    \begin{column}{0.5\textwidth}
+Role of the acting engine : 
 \begin{itemize}
-    \item Hierarchical and temporal planning
-    \item Scalability of robotic architecture and deliberation algorithms.
-\end{itemize}
-
-~
-
-My PhD Subject :
-
-Planning from operational models for deliberative acting in robotics.
+\item Schedule package passage on machines
+\item Allocate package displacement tasks to robots
+\item Monitor the robots' batteries 
+\end{itemize} 
+\end{column}
+\end{columns}
 
 \end{frame}
 
+
 \begin{frame}{The scope of the paper}
-    Goal of the study: adapt a refinement acting engine (RAE) for multi-agents to
+    Adaptation of a Refinement acting engine (RAE) for multi-agents to
     \begin{itemize}
         \item Deal with concurrency
         \item Improve the interleaving of parallel tasks
