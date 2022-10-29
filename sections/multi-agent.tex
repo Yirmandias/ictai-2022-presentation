@@ -1,0 +1,46 @@
+\begin{frame}{Several packages?}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \centering
+            \includegraphics[width = 0.5\textwidth]{images/godot/package.png}
+            
+            \Large $\times n$
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \centering
+            \includegraphics[width = 0.5\textwidth]{images/godot/robot_texture.png}
+            
+            \LARGE $\times m$
+        \end{column}
+    \end{columns}
+    
+    In function of n and m, deliberation must:
+    \begin{itemize}
+        \item Schedule package passage on machines
+        \item Allocate package displacement tasks to robots
+        \item Monitor the robots' batteries 
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{How to deliberate with multiple agents in parallel?}
+    \begin{columns}
+        \begin{column}{0.45\textwidth}
+            RAE shortcomings:
+            \begin{itemize}
+                \item Progression of tasks relies on Round Robin
+                \item Methods limited to a sequence of actions
+                \item Difficulties to integrate sound planning from operational models due to implementation in Python.
+            \end{itemize}
+        \end{column}
+        $\rightarrow$
+        \pause
+        \begin{column}{0.45\textwidth}
+            Adapt RAE for multi-agents to
+            \begin{itemize}
+                \item Deal with concurrency
+                \item Improve the interleaving of parallel tasks
+                \item Reason on shared resources to optimize the overall process
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
