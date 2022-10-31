@@ -1,35 +1,6 @@
 \section{Results for a logistic simulator}
 
-
-\begin{frame}[fragile]{OMPAS models for GobotSim}
-    \begin{columns}
-        \begin{column}{0.5\textwidth}
-            \begin{itemize}
-                \item High-level goal: process all packages in the environment
-                \item Body of the unique method of the high-level task.
-                \setlength{\leftmargini}{0pt}
-    
-                \tiny
-            \begin{lstlisting}
-    (do
-    (mapf new-resource (instance robot))
-    (mapf new-resource (instance machine))
-    (define h1 (async (t_process_packages)))
-    (define h2 (async (t_check_rob_bat)))
-    (await h1))
-            \end{lstlisting}    
-            \end{itemize}
-    
-    
-            
-        \end{column}
-        \begin{column}{0.5\textwidth}
-    \end{column}
-    \end{columns}
-    
-    \end{frame}
-
-\begin{frame}{Validation on Job shop problems}
+\begin{frame}[fragile]{Validation on Job shop problems}
 \centering
 %Outline the features of the new system and the language
 \begin{columns}
@@ -41,13 +12,20 @@
         \end{itemize}
     \end{column}
     \begin{column}{0.5\textwidth}
-        Different strategies:
-        \begin{itemize}
-            \item Greedy
-            \item Advanced
-            \item ALRPTF
-        \end{itemize}
+        Modelled with a unique high-level task:
+        \setlength{\leftmargini}{0pt}
+    
+        \tiny
+    \begin{lstlisting}
+(do
+    (mapf new-resource (instance robot))
+    (mapf new-resource (instance machine))
+    (define h1 (async (t_process_packages)))
+    (define h2 (async (t_check_rob_bat)))
+    (await h1))
+    \end{lstlisting}    
     \end{column}
+    
 \end{columns}
 \end{frame}
 
@@ -113,88 +91,93 @@
 
 
 
-\begin{frame}{Results comparison}
-    \begin{figure}[t]
+\begin{frame}[fragile]{Results comparison}
 
-        \begin{tikzpicture}
-          \begin{axis}[
-                      /pgf/number format/.cd,
-                          use comma,
-                      height = 6cm,
-                      width = \linewidth,
-                      ymajorgrids,
-                      ylabel={Time in seconds},
-                      xlabel={Problems},
-                      ymin = 0,
-                      ymax= 220,
-                      ybar=0pt,
-                      bar width=12pt,
-                      enlarge x limits = 0.3,
-                      nodes near coords,
-                      point meta=explicit symbolic,
-                      scatter/position=absolute,
-                      every node near coord/.style={
-                              at={(\pgfkeysvalueof{/data point/x},1.8)},
-                              anchor=south,
-                          },
-                      bar shift=0pt,
-                      xtick={0,1,2,3},
-                      xticklabels={p1,p2,p3,p4},
-                      x tick label style={rotate=45,anchor=east},
-                      legend cell align = {left},
-                      legend pos = north west,
-                      legend image post style={scale=0.4},
-                      legend style={font = \footnotesize},
-                  ]
-          \addplot+[bar shift = -12pt]
-          plot[
-                  %smooth,
-                  error bars/.cd,
-              y dir=both,
-              y explicit
-          ]
-          table[
-                  x=Problem,
-                  y=mean,
-                  y error=stderror
-          ]
-          {datas/jobshop_greedy.dat};
-          \addplot+
-          [bar shift = +0pt]
-          plot[
-                  %smooth,
-                  error bars/.cd,
-              y dir=both,
-              y explicit
-          ]
-          table[
-                  x=Problem,
-                  y=mean,
-                  y error=stderror
-          ]
-          {datas/jobshop_advanced.dat};
-          \addplot+[bar shift = +12pt]
-          plot[
-                  %smooth,
-                  error bars/.cd,
-              y dir=both,
-              y explicit
-          ]
-          table[
-                  x=Problem,
-                  y=mean,
-                  y error=stderror
-          ]
-          {datas/jobshop_advanced_lrptf.dat};
-      
-          \legend{
-                      Greedy,
-                      Advanced,
-                      ALRPTF}
-        \end{axis}
-      \end{tikzpicture}
-          \caption{Comparison of the mean time to execute 4 6x6 job-shop problems with three different allocation strategies. Each pair problem-strategy has been executed 10 times.
-          Timescale of the simulator is set to 4.}
-        \label{fig:gobot-results}
-      \end{figure}
+    \begin{tikzpicture}
+        \begin{axis}[
+                    /pgf/number format/.cd,
+                        use comma,
+                    height = 6cm,
+                    width = \linewidth,
+                    ymajorgrids,
+                    ylabel={Time in seconds},
+                    xlabel={Problems},
+                    ymin = 0,
+                    ymax= 220,
+                    ybar=0pt,
+                    bar width=12pt,
+                    enlarge x limits = 0.3,
+                    nodes near coords,
+                    point meta=explicit symbolic,
+                    scatter/position=absolute,
+                    every node near coord/.style={
+                            at={(\pgfkeysvalueof{/data point/x},1.8)},
+                            anchor=south,
+                        },
+                    bar shift=0pt,
+                    xtick={0,1,2,3},
+                    xticklabels={p1,p2,p3,p4},
+                    x tick label style={rotate=45,anchor=east},
+                    legend cell align = {left},
+                    legend pos = north west,
+                    legend image post style={scale=0.4},
+                    legend style={font = \footnotesize},
+                ]
+        \addplot+[bar shift = -12pt]
+        plot[
+                %smooth,
+                error bars/.cd,
+            y dir=both,
+            y explicit
+        ]
+        table[
+                x=Problem,
+                y=mean,
+                y error=stderror
+        ]
+        {datas/jobshop_greedy.dat};
+        \addplot+
+        [bar shift = +0pt]
+        plot[
+                %smooth,
+                error bars/.cd,
+            y dir=both,
+            y explicit
+        ]
+        table[
+                x=Problem,
+                y=mean,
+                y error=stderror
+        ]
+        {datas/jobshop_advanced.dat};
+        \addplot+[bar shift = +12pt]
+        plot[
+                %smooth,
+                error bars/.cd,
+            y dir=both,
+            y explicit
+        ]
+        table[
+                x=Problem,
+                y=mean,
+                y error=stderror
+        ]
+        {datas/jobshop_advanced_lrptf.dat};
+    
+        \legend{
+                    Greedy,
+                    Advanced,
+                    ALRPTF}
+    \end{axis}
+    \end{tikzpicture}
+        %\caption{Comparison of the mean time to execute 4 6x6 job-shop problems with three different allocation strategies. Each pair problem-strategy has been executed 10 times.
+        %Timescale of the simulator is set to 4.}
+
+    \small
+    \begin{itemize}
+        \item Greedy : random robot
+        \item Advanced : first available robot
+        \item ALRPTF : advanced with priority to package with Longest Remaining Processing Time
+    \end{itemize}
+  
 \end{frame}

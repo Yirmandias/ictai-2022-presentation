@@ -1,29 +1,10 @@
-\section{Acting for multi-agents}
+\section{RAE for multi-agent systems}
 \subsection{OMPAS: Extending RAE for fleet management}
-\begin{frame}{OMPAS: A new implementation of RAE}
-    
-            RAE extension:
-    \begin{itemize}
-        \item Parallel task handled in dedicated threads
-        \item Dedicated language with support for
-        \begin{itemize}
-            \item Concurrency
-            \item General programming constructs
-            \item Error and interruption
-        \end{itemize}
-    \end{itemize}  
-    
-\end{frame}
 
-\begin{frame}{OMPAS main algorithm}
-    \begin{columns}
-        \begin{column}{0.4\textwidth}
-            \begin{itemize}
-                \item Each task is evaluated in its own thread.
-                \item Shared objects among all threads: state, resources
-            \end{itemize}        
-        \end{column}
-        \begin{column}{0.6\textwidth}
+\begin{frame}{The Operational Model Planning and Acting System (OMPAS), an extension to RAE}
+    \begin{columns}[t]
+        \begin{column}{0.5\textwidth}
+    Parallel task handled in dedicated threads
             \tikzstyle{thread} = [draw, rounded corners, rectangle, fill=black!50]
     \begin{tikzpicture}[scale=0.5, every node/.style={scale=0.5}]
   
@@ -143,114 +124,153 @@
         
         \end{tikzpicture}
         \end{column}
+        \begin{column}{0.5\textwidth}
+        Dedicated language with support for
+        \begin{itemize}
+            \item Concurrency
+            \item General programming constructs
+            \item Error and interruption
+        \end{itemize}
+        \end{column}
     \end{columns}
 \end{frame}
 
-\subsection{SOMPSA: Dedicated acting language}
+\subsection{Acting language}
 
-\begin{frame}{SOMPAS: A Lisp variant with acting primitives}
+\begin{frame}[fragile]{An acting language for concurrency and automated analysis of skills}
     
-    \begin{columns}
+    Language requirements :
+    \begin{itemize}
+        \item Generic programming constructs,
+        \item Acting features:
+        \begin{itemize}
+            \item control of robotic platform
+            \item explicit choice points
+        \end{itemize}
+        \item Support for Concurrency
+        \begin{itemize}
+            \item Interruption handling
+            \item Resource modelling
+        \end{itemize}
+        \item Identified and simple semantic $\rightarrow$ automated analysis of skills to guide choice
+    \end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]{SOMPAS: A Lisp variant based on Scheme}
+    \begin{columns}[t]
+
         \begin{column}{0.5\textwidth}
-            Why Scheme?
+Scheme snippet:
+            \lstset{columns=fullflexible}
+            \begin{lstlisting}
+(begin
+    (define loc-o (read-state loc o))
+    (define loc-t (read-state loc t))
+    (if (!= loc-o loc-t)
+        (exec drive t loc-o))
+    (exec load t o) 
+    (exec drive t l)
+    (exec unload t o))             
+            \end{lstlisting}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            Scheme advantages:
             \begin{itemize}
                 \item Few primitives
                 \item Functional
-                \item Generic programming constructs
-                \item Identified and simple semantic $\rightarrow$ suitable to automated analysis for planning
+                \item Simple to extend
             \end{itemize}
         \end{column}
-        \begin{column}{0.5\textwidth}
-            Features :
-            \begin{itemize}
-                \item Concurrency and interruption
-                \item Acting primitives
-                \item Resource acquisition mechanism for synchronization and exclusion.
-            \end{itemize}
+     \end{columns}
 
-        \end{column}
-    \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{SOMPAS: Concurrency and interruption}
-    handle: new LValue
-    Functions:
+\begin{frame}{Scheme extension for concurrency and interruption}
     \begin{itemize}
-        \item \textit{(async e)}: creates a new thread to evaluate e, returns a handle
-        \item \textit{(await h)}: awaits the result of the concurrent evaluation.
-        \item \textit{(interrupt h)}: interrupts the concurrent evaluation.
+        \item Definition of a new LValue (Symbol, number, boolean, procedure): the \emph{handle}
+        \item Functions:
+        \begin{itemize}
+            \item \textit{(async e)}: creates a new thread to evaluate e, returns a handle
+            \item \textit{(await h)}: awaits the result of the concurrent evaluation.
+            \item \textit{(interrupt h)}: interrupts the concurrent evaluation.
+        \end{itemize}
     \end{itemize}
-    
-\begin{columns}
-    \begin{column}{0.4\textwidth}
-        \lstset{basicstyle=\footnotesize, columns=fullflexible}
-\begin{lstlisting}[language=lisp]
-(begin
- (define h
-  (async 
-    (begin
-     (uninterruptible (begin
-       (exec pick ?r ?o)
-       (exec move ?r ?l)
-       (exec drop ?r ?o)))
-     (exec inspect ?r ?o))))
- (race 
-   (await h)
-   (begin
-    (sleep 10)
-    (interrupt h))))
-\end{lstlisting}
-
-    \end{column}
-    \begin{column}{0.6\textwidth}
-        \newcommand{\Cross}{$\mathbin{\tikz [x=1.4em,y=1.4em,line width=.2em, red] \draw (0,0) -- (1,1) (0,1) -- (1,0);}$}
-    \begin{tikzpicture}
-        \node[draw,
-        rounded corners,
-        ultra thick,
-        minimum height = 3em,
-            minimum width = 7em,] (pick) at (0,0) {pick r1 o3};
-    
-        \node[draw, rounded corners,
-        ultra thick,
-            minimum height = 3em,
-            minimum width = 7em,
-        ] (move) at ($1.5*(pick.south)-0.5*(pick.north)$) {move r1 l6};
-        %\action{move, move r1 l6, 10em, pick}
-    
-        \node[draw, rounded corners,
-        ultra thick,
-            minimum height = 3em,
-            minimum width = 7em,
-        ] (drop) at ($1.5*(move.south) - 0.5*(move.north)$) {drop r1 o3};
-        \node[draw, rounded corners,
-        ultra thick,
-            minimum height = 3em,
-            minimum width = 7em,
-        ] (inspect) at ($1.5*(drop.south) - 0.5*(drop.north)$) {inspect r1 o3};
-        \node at (inspect) {\Cross};
-    
-            \node[] (origin) at ($(pick.north west) + (-1em,+0.5em)$) {~~};
-        
-            \node[] (zero) at ($(origin.west) + (-1em,0)$) {0};
-            \draw[-, ultra thick] (origin.west) -- (origin.east);
-            \node[] (ten) at ($(zero) + (0,-6em)$) {10};
-            \draw[-, ultra thick] ($(origin.west) + (0,-6em)$) -- ($(origin.east) + (0,-6em)$);
-    
-    
-            \node[] (interruption) at ($(ten.east) +(11em,0em)$){\color{red} \textit{Int.}};%{\color{red} \textit{interruption}};
-            \draw[-, ultra thick, dashed, color= red] ($(ten.east)$) -- ( interruption);
-            \node[] (end) at ($1.5*(inspect.south west) - 0.5*(inspect.south west) + (-1em,-1em)$) {};
-            \node[] (time) at ($1.5*(end.south east) - 0.5*(end.south east) + (2em,0)$)  {time (seconds)};
-    
-    
-        \path[->] (origin.center) edge[ultra thick] (end);
-    \end{tikzpicture}
-    \end{column}
-\end{columns}    
 \end{frame}
 
-\begin{frame}{SOMPAS: Acting primitives}
+
+% \begin{frame}[fragile]{Example of program with concurrency and interruptions.}
+    
+% \begin{columns}
+%     \begin{column}{0.4\textwidth}
+%         \lstset{basicstyle=\footnotesize, columns=fullflexible}
+% \begin{lstlisting}[language=lisp]
+% (begin
+%  (define h
+%   (async 
+%     (begin
+%      (uninterruptible (begin
+%        (exec pick ?r ?o)
+%        (exec move ?r ?l)
+%        (exec drop ?r ?o)))
+%      (exec inspect ?r ?o))))
+%  (race 
+%    (await h)
+%    (begin
+%     (sleep 10)
+%     (interrupt h))))
+% \end{lstlisting}
+
+%     \end{column}
+%     \begin{column}{0.6\textwidth}
+%         \newcommand{\Cross}{$\mathbin{\tikz [x=1.4em,y=1.4em,line width=.2em, red] \draw (0,0) -- (1,1) (0,1) -- (1,0);}$}
+%     \begin{tikzpicture}
+%         \node[draw,
+%         rounded corners,
+%         ultra thick,
+%         minimum height = 3em,
+%             minimum width = 7em,] (pick) at (0,0) {pick r1 o3};
+    
+%         \node[draw, rounded corners,
+%         ultra thick,
+%             minimum height = 3em,
+%             minimum width = 7em,
+%         ] (move) at ($1.5*(pick.south)-0.5*(pick.north)$) {move r1 l6};
+%         %\action{move, move r1 l6, 10em, pick}
+    
+%         \node[draw, rounded corners,
+%         ultra thick,
+%             minimum height = 3em,
+%             minimum width = 7em,
+%         ] (drop) at ($1.5*(move.south) - 0.5*(move.north)$) {drop r1 o3};
+%         \node[draw, rounded corners,
+%         ultra thick,
+%             minimum height = 3em,
+%             minimum width = 7em,
+%         ] (inspect) at ($1.5*(drop.south) - 0.5*(drop.north)$) {inspect r1 o3};
+%         \node at (inspect) {\Cross};
+    
+%             \node[] (origin) at ($(pick.north west) + (-1em,+0.5em)$) {~~};
+        
+%             \node[] (zero) at ($(origin.west) + (-1em,0)$) {0};
+%             \draw[-, ultra thick] (origin.west) -- (origin.east);
+%             \node[] (ten) at ($(zero) + (0,-6em)$) {10};
+%             \draw[-, ultra thick] ($(origin.west) + (0,-6em)$) -- ($(origin.east) + (0,-6em)$);
+    
+    
+%             \node[] (interruption) at ($(ten.east) +(11em,0em)$){\color{red} \textit{Int.}};%{\color{red} \textit{interruption}};
+%             \draw[-, ultra thick, dashed, color= red] ($(ten.east)$) -- ( interruption);
+%             \node[] (end) at ($1.5*(inspect.south west) - 0.5*(inspect.south west) + (-1em,-1em)$) {};
+%             \node[] (time) at ($1.5*(end.south east) - 0.5*(end.south east) + (2em,0)$)  {time (seconds)};
+    
+    
+%         \path[->] (origin.center) edge[ultra thick] (end);
+%     \end{tikzpicture}
+%     \end{column}
+% \end{columns}    
+% \end{frame}
+
+\begin{frame}{Acting primitives in SOMPAS}
     \begin{itemize}
     \pause
         \item \textit{(exec a $p_1...p_n$)} executes and monitors a task or command.
@@ -299,65 +319,65 @@
 %     \end{itemize}
 % \end{frame}
 
-\begin{frame}[t,fragile]{Defining an acting domain with SOMPAS}
-    \setlength{\leftmargini}{0pt}
-    \begin{columns}
-        \begin{column}{0.5\textwidth}
-            \begin{itemize}
-                \footnotesize
-                \item Task (label, typed parameters):
-                \tiny
-                \begin{lstlisting}
-(def-task t_process_package
-    (:params (?p package)))
-                \end{lstlisting}
-                \footnotesize
-                \pause
-                \item Method (label, typed parameters, pre-conditions, body):
-                \tiny
-                \begin{lstlisting}
-(def-method m_process_to_do_r
-  (:task t_process_package)
-  (:params (?p package))
-  (:pre-conditions
-    (!= (package.processes_list ?p)
-        nil)))
-  (:body
-    (do
-     (define ?m ...)
-     (t_process_on_machine ?p ?m)
-     (t_process_package ?p)))   
-                \end{lstlisting}
-            \end{itemize}
-        \end{column}
-    \pause
-        \begin{column}{0.5\textwidth}
-            \begin{itemize}
-    \pause
-            \footnotesize
-            \item State-function (label, typed parameters \& result):
-            \tiny
-            \begin{lstlisting}
-(def-state-function at
-    (:params (?r robot))
-    (:result location))
-            \end{lstlisting}
-    \pause
-            \footnotesize
-            \item Command (label, typed parameters):
-            \tiny
-            \begin{lstlisting}
-(def-command pick (:params (?r robot)))
-                \end{lstlisting}
-            \end{itemize}
+% \begin{frame}[t,fragile]{Defining an acting domain with SOMPAS}
+%     \setlength{\leftmargini}{0pt}
+%     \begin{columns}
+%         \begin{column}{0.5\textwidth}
+%             \begin{itemize}
+%                 \footnotesize
+%                 \item Task (label, typed parameters):
+%                 \tiny
+%                 \begin{lstlisting}
+% (def-task t_process_package
+%     (:params (?p package)))
+%                 \end{lstlisting}
+%                 \footnotesize
+%                 \pause
+%                 \item Method (label, typed parameters, pre-conditions, body):
+%                 \tiny
+%                 \begin{lstlisting}
+% (def-method m_process_to_do_r
+%   (:task t_process_package)
+%   (:params (?p package))
+%   (:pre-conditions
+%     (!= (package.processes_list ?p)
+%         nil)))
+%   (:body
+%     (do
+%      (define ?m ...)
+%      (t_process_on_machine ?p ?m)
+%      (t_process_package ?p)))   
+%                 \end{lstlisting}
+%             \end{itemize}
+%         \end{column}
+%     \pause
+%         \begin{column}{0.5\textwidth}
+%             \begin{itemize}
+%     \pause
+%             \footnotesize
+%             \item State-function (label, typed parameters \& result):
+%             \tiny
+%             \begin{lstlisting}
+% (def-state-function at
+%     (:params (?r robot))
+%     (:result location))
+%             \end{lstlisting}
+%     \pause
+%             \footnotesize
+%             \item Command (label, typed parameters):
+%             \tiny
+%             \begin{lstlisting}
+% (def-command pick (:params (?r robot)))
+%                 \end{lstlisting}
+%             \end{itemize}
 
-    \pause
-            ~
-        \normalsize
-        Others:
+%     \pause
+%             ~
+%         \normalsize
+%         Others:
         
-        \textit{lambda, type, constant}
-        \end{column}
+%         \textit{lambda, type, constant}
+%         \end{column}
 
-    \end{columns}
-\end{frame}
+%     \end{columns}
+% \end{frame}
