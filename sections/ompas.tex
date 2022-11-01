@@ -4,7 +4,7 @@
 \begin{frame}{The Operational Model Planning and Acting System (OMPAS), an extension to RAE}
     \begin{columns}[t]
         \begin{column}{0.5\textwidth}
-    Parallel task handled in dedicated threads
+    New task in separated thread
             \tikzstyle{thread} = [draw, rounded corners, rectangle, fill=black!50]
     \begin{tikzpicture}[scale=0.5, every node/.style={scale=0.5}]
   
@@ -125,10 +125,10 @@
         \end{tikzpicture}
         \end{column}
         \begin{column}{0.5\textwidth}
-        Dedicated language with support for
+        Acting language with support for
         \begin{itemize}
+            \item Generic programming constructs
             \item Concurrency
-            \item General programming constructs
             \item Error and interruption
         \end{itemize}
         \end{column}
@@ -160,10 +160,23 @@
 \begin{frame}[fragile]{SOMPAS: A Lisp variant based on Scheme}
     \begin{columns}[t]
 
-        \begin{column}{0.5\textwidth}
-Scheme snippet:
-            \lstset{columns=fullflexible}
-            \begin{lstlisting}
+        \begin{column}{0.4\textwidth}
+            Scheme advantages:
+            \begin{itemize}
+                \item Few primitives
+                \item Functional
+                \item Simple to extend
+            \end{itemize}
+            Definitions:
+            \begin{itemize}
+                \item LValue: Atom, List
+                \item Atom: Symbol, Boolean, Number, Procedure
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.6\textwidth}
+            Example:
+                        \lstset{columns=fullflexible}
+                        \begin{lstlisting}
 (begin
     (define loc-o (read-state loc o))
     (define loc-t (read-state loc t))
@@ -172,29 +185,23 @@ Scheme snippet:
     (exec load t o) 
     (exec drive t l)
     (exec unload t o))             
-            \end{lstlisting}
-        \end{column}
-        \begin{column}{0.5\textwidth}
-            Scheme advantages:
-            \begin{itemize}
-                \item Few primitives
-                \item Functional
-                \item Simple to extend
-            \end{itemize}
-        \end{column}
+                        \end{lstlisting}
+                    \end{column}
      \end{columns}
 
 \end{frame}
 
 \begin{frame}{Scheme extension for concurrency and interruption}
+
+    Definition of a new Atom: the \emph{handle}
+    
+    ~~
+
+    Functions:
     \begin{itemize}
-        \item Definition of a new LValue (Symbol, number, boolean, procedure): the \emph{handle}
-        \item Functions:
-        \begin{itemize}
-            \item \textit{(async e)}: creates a new thread to evaluate e, returns a handle
-            \item \textit{(await h)}: awaits the result of the concurrent evaluation.
-            \item \textit{(interrupt h)}: interrupts the concurrent evaluation.
-        \end{itemize}
+        \item \textit{(async e)}: creates a new thread to evaluate e, returns a handle
+        \item \textit{(await h)}: awaits the result of the concurrent evaluation.
+        \item \textit{(interrupt h)}: interrupts the concurrent evaluation.
     \end{itemize}
 \end{frame}
 
@@ -286,28 +293,67 @@ Scheme snippet:
 \end{frame}
 
 \begin{frame}[t]{SOMPAS: Resources}
+    Definition of a resource:
+    \begin{itemize}
+        \item Object with initial capacity $C(0) = C_{init} $
+        \item acquire($r$,$c$) at time $t$: $c \leq C(t)$ 
+    \end{itemize}
+
+    ~~
+
+    Kinds of resources : 
+    \begin{itemize}
+        \item \emph{unary}: $C_{init} = 1, c = 1$;
+        \item \emph{divisible}: $C_{init} \in  \mathbb{R}_+^*, c \in ]0, C(t)]$
+    \end{itemize}
+
+    ~~
+
+    Functions:
+    \begin{itemize}
+        \item \textit{(new-resource r C)} : create a new resource $r$ with capacity $C$
+        \item \emph{(acquire r c)} : acquisition request for $r$ with amount $c$, returns a resource handle
+        \item \emph{(release h)} : release the resource using the resource handle
+    \end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]{Multi-agent model}
     \begin{columns}
         \begin{column}{0.5\textwidth}
-            Definition of a resource:
-            \begin{itemize}
-                \item Object with initial capacity $C_{init}$
-                \item Acquire $r$ at $t$ with amount $c$: $c \leq C_t$ 
-            \end{itemize}
-            Kinds of resources : 
-            \begin{itemize}
-                \item \emph{unary}: $C_{init} = 1$, $c = 1$;
-                \item \emph{divisible}: $C_{init} \in  \mathbb{R}_+^*$, $c \in ]0, C_t]$
-            \end{itemize}
+            \centering
+            \includegraphics[width = 0.3\textwidth]{images/godot/package.png}
+            
+            \Large $\times n$
         \end{column}
         \begin{column}{0.5\textwidth}
-            Functions
-            \begin{itemize}
-                \item \textit{(new-resource r C)}: declare a new resource with a label and a capacity.
-                \item \emph{(acquire r c)} request the acquisition of $r$ with amount $c$. Returns a resource-handle
-                \item \emph{(release h)} release the resource of the resource-handle
-            \end{itemize}
+            \centering
+            \includegraphics[width = 0.3\textwidth]{images/godot/robot_texture.png}
+            
+            \LARGE $\times m$
         \end{column}
     \end{columns}
+
+~~
+
+        Modelled with a unique high-level task:
+        \setlength{\leftmargini}{0pt}
+
+        \tiny
+    \begin{lstlisting}
+(do
+    (mapf new-resource (instance robot))
+    (mapf new-resource (instance machine))
+    (define h1 (async (t_process_packages)))
+    (define h2 (async (t_check_rob_bat)))
+    (await h1))
+    \end{lstlisting}    
+\end{frame}
+
+\begin{frame}{Running example for multi-agent}
+    \centering
+    \LARGE
+    \href{https://youtu.be/KqBnKKIjug4}{Video example}
 \end{frame}
 
 % \begin{frame}{More advanced features and programming constructs}

@@ -1,32 +1,30 @@
 \section{Results for a logistic simulator}
 
 \begin{frame}[fragile]{Validation on Job shop problems}
-\centering
+%\centering
 %Outline the features of the new system and the language
-\begin{columns}
-    \begin{column}{0.5\textwidth}
-        Restriction of the simulation:
-        \begin{itemize}
-            \item All packages are created at the beginning
-            \item Each machine can do a unique process
-        \end{itemize}
-    \end{column}
-    \begin{column}{0.5\textwidth}
-        Modelled with a unique high-level task:
-        \setlength{\leftmargini}{0pt}
-    
-        \tiny
-    \begin{lstlisting}
-(do
-    (mapf new-resource (instance robot))
-    (mapf new-resource (instance machine))
-    (define h1 (async (t_process_packages)))
-    (define h2 (async (t_check_rob_bat)))
-    (await h1))
-    \end{lstlisting}    
-    \end{column}
-    
-\end{columns}
+$n\times m$ job shop definition:
+\begin{itemize}
+    \item $n$ jobs processed on $m$ on a predefined order.
+    \item each machine can process only one package at a time.
+\end{itemize}
+
+~~
+
+Restriction of the simulation:
+\begin{itemize}
+    \item All packages are created at the beginning
+    \item Each machine can do a unique process
+\end{itemize}
+
+~~
+
+Comparison of allocations strategies:
+\begin{itemize}
+    \item Greedy : random robot
+    \item Advanced : first available robot
+    \item ALRPTF : advanced with priority to package with Longest Remaining Processing Time
+\end{itemize}
 \end{frame}
 
 \newcommand{\calcrowmean}{
@@ -91,7 +89,7 @@
 
 
 
-\begin{frame}[fragile]{Results comparison}
+\begin{frame}[fragile]{Strategies comparison}
 
     \begin{tikzpicture}
         \begin{axis}[
@@ -172,12 +170,5 @@
     \end{tikzpicture}
         %\caption{Comparison of the mean time to execute 4 6x6 job-shop problems with three different allocation strategies. Each pair problem-strategy has been executed 10 times.
         %Timescale of the simulator is set to 4.}
-
-    \small
-    \begin{itemize}
-        \item Greedy : random robot
-        \item Advanced : first available robot
-        \item ALRPTF : advanced with priority to package with Longest Remaining Processing Time
-    \end{itemize}
   
 \end{frame}

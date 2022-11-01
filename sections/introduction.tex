@@ -7,9 +7,12 @@
     \begin{column}{0.5\textwidth}
         Improve flexibility and efficiency of factories using a fleet of Autonomous Mobile Robots (AMRs):
         \begin{itemize}
-            \item Automate agent allocation in function of the load
-            \item Cope with contingencies and deadlines
-            \item Optimize the overall process in terms of resource (time, energy, etc.)
+            \pause
+            \item Automate task allocation to AMR
+            \pause
+            \item Deal with contingencies and deadlines
+            \pause
+            \item Optimize the overall process in functio of time, energy, etc.
         \end{itemize}
     \end{column}
     \begin{column}{0.5\textwidth}
@@ -18,50 +21,75 @@
 \end{columns}
 \end{frame}
 
-\begin{frame}{Factory simulator for logistic and factories problems}
+\begin{frame}{GobotSim, a new factory simulator with an emphasis on deliberation}
     \begin{columns}
         \begin{column}{0.5\textwidth}
-            GobotSim, a 2D factory simulator with an emphasis on :
-            \begin{itemize}
-                \item Deliberation aspects
-                \item Logistic problematics: scheduling, resource
-            \end{itemize}
+            GobotSim, a 2D factory simulator to study scheduling and resource allocation strategies.
         \end{column}
-        \begin{column}{0.5\textwidth}
+        \begin{column}{0.4\textwidth}
             \includegraphics[width=\linewidth]{images/gobot-rae.png}
         \end{column}
     \end{columns}
+    
     ~~
 
-    \begin{columns}
-        \begin{column}{0.2\textwidth}
-            \includegraphics[width = 0.8\textwidth]{images/godot/machine_texture.png}
-        \end{column}
-        \begin{column}{0.7\textwidth}
-            Machines
-            \begin{itemize}
-                \item Processing : does a predefined list of process for packages
-                \item Input: generate packages
-                \item Output: gather fully processed packages
-            \end{itemize}
 
+    \centering
+    \emph{Environment}
+
+~~
+
+
+    \begin{columns}
+        \begin{column}{0.3\textwidth}
+            \centering
+            Package
+
+            \includegraphics[width = 0.5\textwidth]{images/godot/package.png}
+        \end{column}
+        \begin{column}{0.3\textwidth}
+            \centering
+            Machine
+
+            \includegraphics[width = 0.5\textwidth]{images/godot/machine_texture.png}
+
+        \end{column}
+        \begin{column}{0.3\textwidth}
+            \centering
+            Robot
+
+            \includegraphics[width = 0.5\textwidth]{images/godot/robot_texture.png}
         \end{column}
     \end{columns}
 
-    ~
+    % \begin{columns}
+    %     \begin{column}{0.2\textwidth}
+            
+    %     \end{column}
+    %     \begin{column}{0.7\textwidth}
+    %         Machines
+    %         \begin{itemize}
+    %             \item Processing : does a predefined list of process for packages
+    %             \item Input: generate packages
+    %             \item Output: gather fully processed packages
+    %         \end{itemize}
+    %     \end{column}
+    % \end{columns}
 
-    \begin{columns}
-        \begin{column}{0.2\textwidth}
-            \includegraphics[width = 0.8\textwidth]{images/godot/robot_texture.png}
-        \end{column}
-        \begin{column}{0.7\textwidth}
-            Robots : manipulate packages
-            \begin{itemize}
-                \item commands: move, pick, place,\dots
-                \item recharge at recharge areas
-            \end{itemize}
-        \end{column}
-    \end{columns}
+    % ~
+
+    % \begin{columns}
+    %     \begin{column}{0.2\textwidth}
+            
+    %     \end{column}
+    %     \begin{column}{0.7\textwidth}
+    %         Robots : manipulate packages
+    %         \begin{itemize}
+    %             \item commands: move, pick, place,\dots
+    %             \item recharge at recharge areas
+    %         \end{itemize}
+    %     \end{column}
+    % \end{columns}
 \end{frame}
 
 % \begin{frame}{Other logistic simulators}
@@ -83,20 +111,21 @@
     
 % \end{frame}
 
-\begin{frame}{GobotSim environment}
-Mission : Process packages. For each process of a package:
+\begin{frame}{Mission of the robotic agent}
+Mission : Do all the processes of packages.
+For each process of a package:
 \begin{itemize}
     \item Select a machine to do the process.
     \item Select a robot to carry it to the machine.
 \end{itemize}
-~
+% ~
 
-    Role of the autonomous agent:
-    \begin{itemize}
-        \item Control individual AMR.
-        \item Deal with contingencies and errors,
-        \item Optimize choices in function of time and energy.
-    \end{itemize}
+%     Role of the autonomous agent:
+%     \begin{itemize}
+%         \item Control individual AMR.
+%         \item Deal with contingencies and errors,
+%         \item Optimize choices in function of time and energy.
+%     \end{itemize}
 \end{frame}
 \subsection{Programming the autonomous agent}
 
@@ -106,6 +135,10 @@ Mission : Process packages. For each process of a package:
         \item Different methods for adapted to various contexts.
         \item Different levels of modelling and abstraction $\rightarrow$ ease deliberation.
     \end{itemize}
+   
+\end{frame}
+
+\begin{frame}{Procedure based system}
     Refinement-based acting with the Refinement Acting Engine (RAE) \cite{ghallabAutomatedPlanningActing2016}:
     \begin{itemize}
         \item Procedure-based system.
@@ -146,13 +179,13 @@ Mission : Process packages. For each process of a package:
     \begin{column}{0.45\textwidth}
         \begin{figure}
             \begin{tikzpicture}
-                \node[draw,ellipse, ultra thick] (t) {\textit{open door}} [sibling distance = 3.5cm]
+                \node[draw, ellipse, ultra thick] (t) {\textit{take}} [sibling distance = 3.5cm]
                   child {node[draw, ultra thick] (m1) {$m_1$} edge from parent [dashed]
-                  child {node[draw,rounded corners, ultra thick, solid] (a1) {$push$} edge from parent
+                  child {node[draw,rounded corners, ultra thick, solid] (a1) {$pick$} edge from parent
                   }} 
                   child {node[draw, ultra thick] (m2) {$m_2$} edge from parent [dashed] [sibling distance = 1.5cm]
-                  child {node[draw, rounded corners, solid, ultra thick] (a2) {grab handle} edge from parent [solid]}
-                  child {node[draw, rounded corners, solid, ultra thick] {$pull$} edge from parent [solid]}};
+                  child {node[draw, ellipse, ultra thick, solid] (a2) {$move$} edge from parent [solid]}
+                  child {node[draw, rounded corners, solid, ultra thick] {$pick$} edge from parent [solid]}};
                 \node[right = 0em of t] {$\in T$};
                 \node[right = 0em of m1] {$\in M_t$};
                 \node[right = 0em of m2] {$\in M_t$};
@@ -209,37 +242,37 @@ Mission : Process packages. For each process of a package:
         \begin{column}{0.35\textwidth}
             \begin{tikzpicture}
                 \onslide<2>
-                \node[draw,ellipse, ultra thick] (t) {$\tau$};
+                \node[draw,ellipse, ultra thick] (t) {$take$};
                 \onslide<3-9>
-                \node[draw,ellipse, ultra thick, color = orange] (t) {$\tau$};
+                \node[draw,ellipse, ultra thick, color = orange] (t) {$take$};
                 \onslide<10>
-                \node[draw,ellipse, ultra thick, color = green] (t) {$\tau$};
+                \node[draw,ellipse, ultra thick, color = green] (t) {$take$};
                 \onslide<3>
-                \node[draw, ultra thick, below= 2em of t, xshift = -3em] (m1) {$m_1$};
-                \node[draw, ultra thick, below= 2em of t, xshift = 3em] (m2) {$m_2$};
+                \node[draw, ultra thick, below= 2em of t, xshift = -2em] (m1) {$m_1$};
+                \node[draw, ultra thick, below= 2em of t, xshift = 2em] (m2) {$m_2$};
                 \onslide<4->
-                \node[draw, ultra thick, below= 2em of t, xshift = -3em, color = orange] (m1) {$m_1$};
-                \node[draw, ultra thick, below= 2em of t, xshift = 3em, color = gray] (m2) {$m_2$};
+                \node[draw, ultra thick, below= 2em of t, xshift = -2em, color = gray] (m1) {$m_1$};
+                \node[draw, ultra thick, below= 2em of t, xshift = 2em, color = orange] (m2) {$m_2$};
                 \onslide<10>
-                \node[draw, ultra thick, below= 2em of t, xshift = -3em, color = green] (m1) {$m_1$};
+                \node[draw, ultra thick, below= 2em of t, xshift = 2em, color = green] (m2) {$m_2$};
                 \onslide<3->
                 \path[-] (t) edge (m1) (t) edge (m2);
                 \onslide<5>
-                \node[draw,rounded corners, ultra thick, solid, below = 2em of m1, xshift = -1.5em] (a1) {$a1$};
+                \node[draw,rounded corners, ultra thick, solid, below = 2em of m2, xshift = 2em] (a1) {$pick$};
                 \onslide<6>
-                \node[draw,rounded corners, ultra thick, solid, below = 2em of m1, xshift = -1.5em, color = orange] (a1) {$a1$};
+                \node[draw,rounded corners, ultra thick, solid, below = 2em of m2, xshift = 2em, color = orange] (a1) {$pick$};
                 \onslide<7->
-                \node[draw,rounded corners, ultra thick, solid, below = 2em of m1, xshift = -1.5em, color = green] (a1) {$a1$};
+                \node[draw,rounded corners, ultra thick, solid, below = 2em of m2, xshift = 2em, color = green] (a1) {$pick$};
                 \onslide<5-7>
-                \node[draw,ellipse, ultra thick, solid, below = 2em of m1, xshift = 1.5em] (t2) {$\tau_s$};
+                \node[draw,ellipse, ultra thick, solid, below = 2em of m2, xshift = -2em] (t2) {$move$};
                 \onslide<8->
-                \node[draw,ellipse, ultra thick, solid, below = 2em of m1, xshift = 1.5em, color = orange] (t2) {$\tau_s$};
+                \node[draw,ellipse, ultra thick, solid, below = 2em of m2, xshift = -2em, color = orange] (t2) {$move$};
                 \onslide<10>
-                \node[draw,ellipse, ultra thick, solid, below = 2em of m1, xshift = 1.5em, color = green] (t2) {$\tau_s$};
+                \node[draw,ellipse, ultra thick, solid, below = 2em of m2, xshift = -2em, color = green] (t2) {$move$};
   
   
                 \onslide<5->
-                \path[-] (m1) edge (a1) (m1) edge(t2);
+                \path[-] (m2) edge (a1) (m2) edge(t2);
   
   
                 \onslide<7>
@@ -276,24 +309,77 @@ Mission : Process packages. For each process of a package:
 
 
 
-\begin{frame}{Simple scenario: one package}
+\begin{frame}[fragile]{Simple scenario: one package}
     \centering
     \begin{columns}
         \begin{column}{0.5\textwidth}
             \centering
-            \includegraphics[width = 0.5\textwidth]{images/godot/package.png}
+            \includegraphics[width = 0.3\textwidth]{images/godot/package.png}
             
             \LARGE \emph{$\times 1$}
         \end{column}
         \begin{column}{0.5\textwidth}
             \centering
-            \includegraphics[width = 0.5\textwidth]{images/godot/robot_texture.png}
+            \includegraphics[width = 0.3\textwidth]{images/godot/robot_texture.png}
             
             \LARGE \emph{$\times 1$}
         \end{column}
     \end{columns}
+    \pause
+    \begin{itemize}
+        \item task: process(?p)
+        \item methods:
+    \end{itemize}
+    \footnotesize
+    \begin{columns}[t]
+        \begin{column}{0.32\textwidth}
+            m1(?p, ?r, ?m)
+            \begin{align*}
+                pre: &\ proc(?p) \neq \emptyset \\
+                 &battery(?r) > 40\% \\
+                 &proc(?p)[1] \in proc(?m) \\
+                 body:&take(?p,?r) \\
+                     &carry(?p,?r,?m) \\
+                     &process(?p)
+            \end{align*}
+        \end{column}
+        \begin{column}{0.32\textwidth}
+            m2(?p, ?r, ?m)
+            \begin{align*}
+                pre: &\ proc(?p)  = \emptyset \\
+                 &battery(?r) > 40\% \\
+                 &kind(?m) = \text{output} \\
+                 body:&take(?p,?r) \\
+                     &carry(?p,?r,?m) \\
+            \end{align*}
+        \end{column}
+        \begin{column}{0.32\textwidth}
+            m3(?p, ?r) 
+            \begin{align*}  
+                pre: &battery(?r) \leq 40\% \\
+                 body:&recharge(?r) \\
+                     &process(?p)
+            \end{align*}
+        \end{column}
+    \end{columns}
+    % \begin{align*}
+    %     \text{task:} & \text{process(?p)}\\
+    %     \text{methods:}& \\
+    %     m1(?p, ?r, ?m) \\
+    %     \text{pre:} & !empty(processes(?p)) \\
+    %      &battery(?r) \leq 40\% \\
+    %      &first(processes(?p)) \in processes(?m) \\
+    %      body:&take(?p,?r) \\
+    %          &carry(?p,?r,?m) \\
+    %          &process(?p)
+    % \end{align*}
+    
+\end{frame}
 
-    Example video
+\begin{frame}{Running example with one package}
+    \LARGE
+    \centering
+    \href{https://youtu.be/a4_tITUTQuQ}{Video example}
 \end{frame}
 
 \subsection{Multi-agent scenario}
@@ -316,29 +402,30 @@ Mission : Process packages. For each process of a package:
     
     ~
 
-    In function of n and m, deliberation must:
+    New decisions for the robotic system:
     \begin{itemize}
         \item Schedule package passage on machines
         \item Allocate package displacement tasks to robots
-        \item Monitor the robots' batteries 
+        %\item Monitor the robots' batteries 
     \end{itemize}
 
     \centering
-    \href{https://youtu.be/KqBnKKIjug4}{Video example}
 \end{frame}
 
-\begin{frame}{How to deliberate with multiple agents in parallel?}
-    \begin{columns}
+\begin{frame}{Multi-agent refinement-based deliberation}
+    \begin{columns}[t]
         \begin{column}{0.45\textwidth}
             RAE shortcomings:
             \begin{itemize}
                 \item Progression of tasks relies on Round Robin
                 \item Methods limited to a sequence of actions
-                \item Difficulties to integrate sound planning from operational models due to implementation in Python.
+                %\item Difficulties to integrate sound planning from operational models due to implementation in Python.
             \end{itemize}
         \end{column}
-        $\rightarrow$
-        \pause
+        \begin{column}{0.1\textwidth}
+            $\rightarrow$
+
+        \end{column}
         \begin{column}{0.45\textwidth}
             Adapt RAE for multi-agents to
             \begin{itemize}
