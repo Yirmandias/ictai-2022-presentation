@@ -5,14 +5,18 @@
     \centering
 \begin{columns}
     \begin{column}{0.5\textwidth}
-        Improve flexibility and efficiency of factories using a fleet of Autonomous Mobile Robots (AMRs):
+        Improve flexibility and efficiency of factories using a fleet of Autonomous Mobile Robots (AMRs).
+
+        ~~
+
+        High-level robotic agent to:
         \begin{itemize}
             \pause
             \item Automate task allocation to AMR
             \pause
             \item Deal with contingencies and deadlines
             \pause
-            \item Optimize the overall process in functio of time, energy, etc.
+            \item Optimize the overall process in function of time, energy, etc.
         \end{itemize}
     \end{column}
     \begin{column}{0.5\textwidth}
@@ -112,8 +116,7 @@
 % \end{frame}
 
 \begin{frame}{Mission of the robotic agent}
-Mission : Do all the processes of packages.
-For each process of a package:
+Mission : Do all the processes of packages, and for each process of a package:
 \begin{itemize}
     \item Select a machine to do the process.
     \item Select a robot to carry it to the machine.
@@ -132,16 +135,15 @@ For each process of a package:
 \begin{frame}{Programming the autonomous agent}
     Hierarchical representation of the agent skills.
     \begin{itemize}
-        \item Different methods for adapted to various contexts.
-        \item Different levels of modelling and abstraction $\rightarrow$ ease deliberation.
+        \item One task, different methods $\rightarrow$ adapt to the context
+        \item Several levels of abstraction $\rightarrow$ ease deliberation.
     \end{itemize}
    
 \end{frame}
 
-\begin{frame}{Procedure based system}
-    Refinement-based acting with the Refinement Acting Engine (RAE) \cite{ghallabAutomatedPlanningActing2016}:
+\begin{frame}{Refinement Acting Engine: deliberation with hierarchical skills}
+    Features of the system:
     \begin{itemize}
-        \item Procedure-based system.
         \item Monitor procedure and command execution
         \item Support parallel execution.
         \item Refinement at runtime for more reactive systems.
@@ -153,15 +155,11 @@ For each process of a package:
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Hierarchical operational models to represent the capabilities of an agent}
+\begin{frame}{Hierarchical formalism}
 
 \begin{columns}[T]
     \begin{column}{0.55\textwidth}
-        Agent behavior = collection of skills (procedures)
-        
-        ~
-        \pause
-        Hierarchical operational models : Acting domain \textbf{$A_\Delta (A, T, M_t)$}
+        Acting domain \textbf{$A_\Delta (A, T, M_t)$}
         \small
         \pause
         \begin{itemize}
@@ -177,31 +175,27 @@ For each process of a package:
     \end{column}
     \pause
     \begin{column}{0.45\textwidth}
-        \begin{figure}
-            \begin{tikzpicture}
-                \node[draw, ellipse, ultra thick] (t) {\textit{take}} [sibling distance = 3.5cm]
-                  child {node[draw, ultra thick] (m1) {$m_1$} edge from parent [dashed]
-                  child {node[draw,rounded corners, ultra thick, solid] (a1) {$pick$} edge from parent
-                  }} 
-                  child {node[draw, ultra thick] (m2) {$m_2$} edge from parent [dashed] [sibling distance = 1.5cm]
-                  child {node[draw, ellipse, ultra thick, solid] (a2) {$move$} edge from parent [solid]}
-                  child {node[draw, rounded corners, solid, ultra thick] {$pick$} edge from parent [solid]}};
-                \node[right = 0em of t] {$\in T$};
-                \node[right = 0em of m1] {$\in M_t$};
-                \node[right = 0em of m2] {$\in M_t$};
-                \node[right = 0em of a1] {$\in A$};
+        \begin{tikzpicture}
+            \node[draw, ellipse, ultra thick] (t) {\textit{take}} [sibling distance = 3.5cm]
+                child {node[draw, ultra thick] (m1) {$m_1$} edge from parent [dashed]
+                child {node[draw,rounded corners, ultra thick, solid] (a1) {$pick$} edge from parent
+                }} 
+                child {node[draw, ultra thick] (m2) {$m_2$} edge from parent [dashed] [sibling distance = 1.5cm]
+                child {node[draw, ellipse, ultra thick, solid] (a2) {$move$} edge from parent [solid]}
+                child {node[draw, rounded corners, solid, ultra thick] {$pick$} edge from parent [solid]}};
+            \node[right = 0em of t] {$\in T$};
+            \node[right = 0em of m1] {$\in M_t$};
+            \node[right = 0em of m2] {$\in M_t$};
+            \node[right = 0em of a1] {$\in A$};
 
-            \end{tikzpicture}
-            \caption{Example of hierarchy for the \textit{task} \textit{open door}}
+        \end{tikzpicture}
 
-            
-        \end{figure}
     \end{column}
 \end{columns}
     
 \end{frame}
 
-\begin{frame}{RAE algorithms}
+\begin{frame}{RAE functioning}
     \begin{columns}[T]
   
         \begin{column}{0.65\textwidth}
@@ -402,7 +396,7 @@ For each process of a package:
     
     ~
 
-    New decisions for the robotic system:
+    New problematics for the robotic system:
     \begin{itemize}
         \item Schedule package passage on machines
         \item Allocate package displacement tasks to robots
@@ -413,26 +407,20 @@ For each process of a package:
 \end{frame}
 
 \begin{frame}{Multi-agent refinement-based deliberation}
-    \begin{columns}[t]
-        \begin{column}{0.45\textwidth}
-            RAE shortcomings:
-            \begin{itemize}
-                \item Progression of tasks relies on Round Robin
-                \item Methods limited to a sequence of actions
-                %\item Difficulties to integrate sound planning from operational models due to implementation in Python.
-            \end{itemize}
-        \end{column}
-        \begin{column}{0.1\textwidth}
-            $\rightarrow$
 
-        \end{column}
-        \begin{column}{0.45\textwidth}
-            Adapt RAE for multi-agents to
-            \begin{itemize}
-                \item Deal with concurrency
-                \item Improve the interleaving of parallel tasks
-                \item Reason on shared resources to optimize the overall process
-            \end{itemize}
-        \end{column}
-    \end{columns}
+    RAE shortcomings:
+    \begin{itemize}
+        \item Progression of tasks rely on Round Robin $\rightarrow$ difficulty to interleave tasks using the same resources.
+        \item Methods limited to a sequence of actions
+        %\item Difficulties to integrate sound planning from operational models due to implementation in Python.
+    \end{itemize}
+
+    ~~
+
+    Solution: adapt RAE for multi-agents to
+    \begin{itemize}
+        \item Deal natively with with concurrency to improve the interleaving of tasks
+        \item Reason on resource allocation strategies to optimize the overall process
+    \end{itemize}
+
 \end{frame}
