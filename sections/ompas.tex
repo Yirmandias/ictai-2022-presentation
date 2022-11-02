@@ -36,7 +36,7 @@
         rounded corners,
         text = black,
         fill=black!10,
-        align = center] (S) at ($(R.south) + (0,0.6)$) {State};
+        align = center] (S) at ($(R.south) + (0,0.6)$) {Estimated State};
   
         %main
         \node[draw = black, very thick,
@@ -124,6 +124,7 @@
         
         \end{tikzpicture}
         \end{column}
+        \pause
         \begin{column}{0.5\textwidth}
         Operational language with
         \begin{itemize}
@@ -162,14 +163,17 @@
     \centering
     Scheme : Recursive evaluation of expressions \verb|(f e1 ... en)|
     
+    ~~
 
+\pause
     \begin{columns}[t]
         \begin{column}{0.6\textwidth}
-        \begin{itemize}
-            \item Expression = \{Atom, List\}
-            \item Atom = \{Symbol, Boolean, Number, Procedure\}
-        \end{itemize}
-
+            Definitions:
+            \begin{itemize}
+                \item Expression = \{Atom, List\}
+                \item Atom = \{Symbol, Boolean, Number, Procedure\}
+            \end{itemize}
+\pause
         \end{column}
         \begin{column}{0.4\textwidth}
             Scheme advantages:
@@ -188,7 +192,7 @@
     Definition of a new Atom: the \emph{handle}
     
     ~~
-
+\pause
     \begin{columns}
         \begin{column}{0.6\textwidth}
             Functions:
@@ -198,7 +202,9 @@
                 \item \textit{(interrupt h)}: interrupts the concurrent evaluation.
             \end{itemize}
         \end{column}
+        \pause
         \begin{column}{0.4\textwidth}
+        Example: 
 \small
 \lstset{columns=fullflexible}
             \begin{lstlisting}
@@ -287,19 +293,21 @@
 \begin{frame}[fragile]{Acting primitives in SOMPAS}
 \begin{columns}
     \begin{column}{0.5\textwidth}
+        Functions:
         \begin{itemize}
             \pause
                 \item \textit{(exec a $p_1...p_n$)} executes and monitors a task or command.
-            \pause
                 % \begin{itemize}
                 %     \item command : resorts to the platform
                 %     \item task: selects a method and execute its operational model.
                 % \end{itemize}
             \pause
                 \item \textit{(read-state sf $p_1...p_n$)} returns the value of a state-variable
-                \item \textit{(arbitrary set $\lambda$)} returns an arbitrary element from a $set$%. $\lambda$ can be used to select among the $set$.
+            % \pause
+            %     \item \textit{(arbitrary set $\lambda$)} returns an arbitrary element from a $set$%. $\lambda$ can be used to select among the $set$.
             \end{itemize}
     \end{column}
+\pause
     \begin{column}{0.5\textwidth}
            
     Example:
@@ -328,6 +336,7 @@
                 \item Acquire($r$,$c$) at time $t$ $\implies$ $c \leq C(t)$ 
             \end{itemize}
         \end{column}
+        \pause
         \begin{column}{0.5\textwidth}
             \begin{itemize}
                 \item \emph{unary}: $C_{init} = 1, c = 1$;
@@ -338,7 +347,7 @@
     
     ~~
 
-
+\pause
     \begin{columns}
         \begin{column}{0.6\textwidth}
             Functions:
@@ -348,7 +357,9 @@
                 \item \emph{(release h)} : release the resource using the resource handle
             \end{itemize}
         \end{column}
+        \pause
         \begin{column}{0.4\textwidth}
+        Example: 
             \small
             \lstset{columns=fullflexible}
             \begin{lstlisting}
@@ -381,20 +392,23 @@
             \LARGE $\times m$
         \end{column}
     \end{columns}
-
+\pause
 ~~
-
+\centering
         Modelled with a unique high-level task:
         \setlength{\leftmargini}{0pt}
         \lstset{columns=fullflexible}
         \small
-    \begin{lstlisting}
+    \begin{lstlisting}[language = lisp]
 (do
+    ;declare robots and machines as resources
     (mapf new-resource (instance robot))
     (mapf new-resource (instance machine))
+    ;process all packages
     (define h1 (async (t_process_packages)))
+    ;monitor in parallel batteries of robots
     (define h2 (async (t_check_rob_bat)))
-    (await h1))
+    (await h1)) ;await that all packages are processed
     \end{lstlisting}    
 \end{frame}
 

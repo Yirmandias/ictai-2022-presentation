@@ -1,14 +1,17 @@
 \section{Introduction}
 \subsection{Deliberation for logistic}
 
+
 \begin{frame}{Industry 4.0: Logistic enhanced by robotics}
     \centering
+
+    Improve flexibility and efficiency of factories using a fleet of Autonomous Mobile Robots (AMRs).
+
+    ~~
+
 \begin{columns}
-    \begin{column}{0.5\textwidth}
-        Improve flexibility and efficiency of factories using a fleet of Autonomous Mobile Robots (AMRs).
-
-        ~~
-
+    \begin{column}{0.6\textwidth}
+        \pause
         High-level robotic agent to:
         \begin{itemize}
             \pause
@@ -19,8 +22,8 @@
             \item Optimize the overall process in function of time, energy, etc.
         \end{itemize}
     \end{column}
-    \begin{column}{0.5\textwidth}
-        \includegraphics[width = \textwidth]{images/logisticsolutions.jpg}
+    \begin{column}{0.4\textwidth}
+        \onslide<1->\includegraphics[width = \textwidth]{images/logisticsolutions.jpg}
     \end{column}
 \end{columns}
 \end{frame}
@@ -37,30 +40,38 @@
     
     ~~
 
-
+\pause
     \centering
     \emph{Environment}
 
 ~~
 
-
+\pause
     \begin{columns}
         \begin{column}{0.3\textwidth}
             \centering
             Package
 
+            ~~
+
             \includegraphics[width = 0.5\textwidth]{images/godot/package.png}
         \end{column}
+        \pause
         \begin{column}{0.3\textwidth}
             \centering
             Machine
 
+            ~~
+
             \includegraphics[width = 0.5\textwidth]{images/godot/machine_texture.png}
 
         \end{column}
+        \pause
         \begin{column}{0.3\textwidth}
             \centering
             Robot
+
+            ~~
 
             \includegraphics[width = 0.5\textwidth]{images/godot/robot_texture.png}
         \end{column}
@@ -116,9 +127,12 @@
 % \end{frame}
 
 \begin{frame}{Mission of the robotic agent}
+    \centering
 Mission : Do all the processes of packages, and for each process of a package:
 \begin{itemize}
+    \pause
     \item Select a machine to do the process.
+    \pause
     \item Select a robot to carry it to the machine.
 \end{itemize}
 % ~
@@ -135,7 +149,9 @@ Mission : Do all the processes of packages, and for each process of a package:
 \begin{frame}{Programming the autonomous agent}
     Hierarchical representation of the agent skills.
     \begin{itemize}
-        \item One task, different methods $\rightarrow$ adapt to the context
+        \pause
+        \item Different methods/goal $\rightarrow$ adapt to the context
+        \pause
         \item Several levels of abstraction $\rightarrow$ ease deliberation.
     \end{itemize}
    
@@ -144,8 +160,11 @@ Mission : Do all the processes of packages, and for each process of a package:
 \begin{frame}{Refinement Acting Engine: deliberation with hierarchical skills}
     Features of the system:
     \begin{itemize}
+        \pause
         \item Monitor procedure and command execution
+        \pause
         \item Support parallel execution.
+        \pause
         \item Refinement at runtime for more reactive systems.
         \begin{tikzpicture}
             \node[] (task) {$\tau(p_1,\dots,p_n)$};
@@ -237,31 +256,32 @@ Mission : Do all the processes of packages, and for each process of a package:
             \begin{tikzpicture}
                 \onslide<2>
                 \node[draw,ellipse, ultra thick] (t) {$take$};
-                \onslide<3-9>
+                \onslide<3-11>
                 \node[draw,ellipse, ultra thick, color = orange] (t) {$take$};
-                \onslide<10>
+                \onslide<12>
                 \node[draw,ellipse, ultra thick, color = green] (t) {$take$};
                 \onslide<3>
                 \node[draw, ultra thick, below= 2em of t, xshift = -2em] (m1) {$m_1$};
                 \node[draw, ultra thick, below= 2em of t, xshift = 2em] (m2) {$m_2$};
                 \onslide<4->
                 \node[draw, ultra thick, below= 2em of t, xshift = -2em, color = gray] (m1) {$m_1$};
+                \onslide<4-11>
                 \node[draw, ultra thick, below= 2em of t, xshift = 2em, color = orange] (m2) {$m_2$};
-                \onslide<10>
+                \onslide<12>
                 \node[draw, ultra thick, below= 2em of t, xshift = 2em, color = green] (m2) {$m_2$};
                 \onslide<3->
                 \path[-] (t) edge (m1) (t) edge (m2);
-                \onslide<5>
+                \onslide<5-10>
                 \node[draw,rounded corners, ultra thick, solid, below = 2em of m2, xshift = 2em] (a1) {$pick$};
-                \onslide<6>
+                \onslide<11>
                 \node[draw,rounded corners, ultra thick, solid, below = 2em of m2, xshift = 2em, color = orange] (a1) {$pick$};
-                \onslide<7->
+                \onslide<12>
                 \node[draw,rounded corners, ultra thick, solid, below = 2em of m2, xshift = 2em, color = green] (a1) {$pick$};
-                \onslide<5-7>
+                \onslide<5>
                 \node[draw,ellipse, ultra thick, solid, below = 2em of m2, xshift = -2em] (t2) {$move$};
-                \onslide<8->
+                \onslide<6-9>
                 \node[draw,ellipse, ultra thick, solid, below = 2em of m2, xshift = -2em, color = orange] (t2) {$move$};
-                \onslide<10>
+                \onslide<10->
                 \node[draw,ellipse, ultra thick, solid, below = 2em of m2, xshift = -2em, color = green] (t2) {$move$};
   
   
@@ -278,12 +298,13 @@ Mission : Do all the processes of packages, and for each process of a package:
                 \node[draw, ultra thick, below = 2em of t2, xshift = -1.5em, color = orange] (m3) {$m_3$};
                 \node[draw, ultra thick, below = 2em of t2, xshift = 1.5em, color = gray] (m4) {$m_4$};
                 \path[-] (t2) edge  (m3) (t2) edge (m4);
-  
+
+                \onslide<9>
+                \node[draw, ultra thick, below = 2em of t2, xshift = 1.5em, color = orange] (m4) {$m_4$};
                 \onslide<9->
                 \node[draw, ultra thick, below = 2em of t2, xshift = -1.5em, color = red] (m3) {$m_3$};
-                \node[draw, ultra thick, below = 2em of t2, xshift = 1.5em, color = orange] (m4) {$m_4$};
                 \path[-] (t2) edge  (m3) (t2) edge (m4);
-                \onslide<10>
+                \onslide<10->
                 \node[draw, ultra thick, below = 2em of t2, xshift = 1.5em, color = green] (m4) {$m_4$};
                 
                 \onslide<8->
@@ -320,15 +341,19 @@ Mission : Do all the processes of packages, and for each process of a package:
         \end{column}
     \end{columns}
     \pause
-    \begin{itemize}
-        \item task: process(?p)
-        \item methods:
-    \end{itemize}
+    \centering
+    Unique task \textit{process(?p)}
+
+    Methods:
+    
+    ~~
+
+
     \footnotesize
     \begin{columns}[t]
         \begin{column}{0.32\textwidth}
-            m1(?p, ?r, ?m)
             \begin{align*}
+                m1&(?p, ?r, ?m)\\
                 pre: &\ proc(?p) \neq \emptyset \\
                  &battery(?r) > 40\% \\
                  &proc(?p)[1] \in proc(?m) \\
@@ -338,8 +363,8 @@ Mission : Do all the processes of packages, and for each process of a package:
             \end{align*}
         \end{column}
         \begin{column}{0.32\textwidth}
-            m2(?p, ?r, ?m)
             \begin{align*}
+                m2&(?p, ?r, ?m) \\
                 pre: &\ proc(?p)  = \emptyset \\
                  &battery(?r) > 40\% \\
                  &kind(?m) = \text{output} \\
@@ -348,8 +373,8 @@ Mission : Do all the processes of packages, and for each process of a package:
             \end{align*}
         \end{column}
         \begin{column}{0.32\textwidth}
-            m3(?p, ?r) 
-            \begin{align*}  
+            \begin{align*}
+                m3&(?p, ?r) \\ 
                 pre: &battery(?r) \leq 40\% \\
                  body:&recharge(?r) \\
                      &process(?p)
@@ -395,10 +420,12 @@ Mission : Do all the processes of packages, and for each process of a package:
     \end{columns}
     
     ~
-
+\pause
     New problematics for the robotic system:
     \begin{itemize}
+        \pause
         \item Schedule package passage on machines
+        \pause
         \item Allocate package displacement tasks to robots
         %\item Monitor the robots' batteries 
     \end{itemize}
@@ -407,19 +434,23 @@ Mission : Do all the processes of packages, and for each process of a package:
 \end{frame}
 
 \begin{frame}{Multi-agent refinement-based deliberation}
-
     RAE shortcomings:
     \begin{itemize}
-        \item Progression of tasks rely on Round Robin $\rightarrow$ difficulty to interleave tasks using the same resources.
+        \pause
+        \item Progression of tasks rely on Round Robin \pause$\rightarrow$ difficulty to interleave tasks using the same resources.
+        \pause
         \item Methods limited to a sequence of actions
         %\item Difficulties to integrate sound planning from operational models due to implementation in Python.
     \end{itemize}
 
     ~~
-
+    
+\pause
     Solution: adapt RAE for multi-agents to
     \begin{itemize}
+        \pause
         \item Deal natively with with concurrency to improve the interleaving of tasks
+        \pause
         \item Reason on resource allocation strategies to optimize the overall process
     \end{itemize}
 
