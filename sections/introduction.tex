@@ -1,18 +1,21 @@
 \section{Introduction}
 \subsection{Robots in factories}
 
-
-\begin{frame}{Industry 4.0: Logistic enhanced by robotics}
+\begin{frame}{Industry 4.0}
     \centering
 
     Improve flexibility and efficiency of factories using a fleet of Autonomous Mobile Robots (AMRs).
 
     ~~
 
+    \pause
+
+    Our focus: deliberation architectures and algorithms.
+
 \begin{columns}
     \begin{column}{0.6\textwidth}
         \pause
-        High-level robotic agent to:
+        Develop high-level robotic agent to
         \begin{itemize}
             \pause
             \item Automate task allocation to AMR
@@ -28,83 +31,70 @@
 \end{columns}
 \end{frame}
 
-\begin{frame}{Running example : factory simulator with an emphasis on deliberation}
+\begin{frame}{Abstraction of the problem for deliberation: factory simulator}
     \begin{columns}
-        \begin{column}{0.5\textwidth}
-            2D factory simulator to study scheduling and resource allocation strategies.
+        \begin{column}{0.6\textwidth}
+            GobotSim: 2D factory simulator with a focus on scheduling and resource allocation problematics.
+
+            ~~
+
+            Hypothesis:
+            \begin{itemize}
+                \item Fully observable environment
+                \item No communication problem
+                \item Movement and manipulation simplified
+            \end{itemize}
         \end{column}
         \begin{column}{0.4\textwidth}
             \includegraphics[width=\linewidth]{images/gobot-rae.png}
         \end{column}
     \end{columns}
-    
-    ~~
+\end{frame}
 
-\pause
-    \centering
-    \emph{Environment}
-
-~~
-
-\pause
-    \begin{columns}
-        \begin{column}{0.3\textwidth}
+\begin{frame}{GobotSim environment}
+    \begin{columns}[t]
+        \begin{column}{0.32\textwidth}
             \centering
             Package
 
             ~~
 
             \includegraphics[width = 0.5\textwidth]{images/godot/package.png}
+            \small
+            \begin{itemize}
+                \item List of process to be done
+            \end{itemize}
         \end{column}
         \pause
-        \begin{column}{0.3\textwidth}
+        \begin{column}{0.32\textwidth}
             \centering
             Machine
 
             ~~
 
             \includegraphics[width = 0.5\textwidth]{images/godot/machine_texture.png}
+            \small
+            \begin{itemize}
+                \item Kinds: input, output, processing
+                \item List of process that can be done
+            \end{itemize}
 
         \end{column}
         \pause
-        \begin{column}{0.3\textwidth}
+        \begin{column}{0.32\textwidth}
             \centering
             Robot
 
             ~~
 
             \includegraphics[width = 0.5\textwidth]{images/godot/robot_texture.png}
+            \small
+            \begin{itemize}
+                \item Capabilities: move, pick, place,
+                \item Battery
+            \end{itemize}
         \end{column}
     \end{columns}
-
-    % \begin{columns}
-    %     \begin{column}{0.2\textwidth}
-            
-    %     \end{column}
-    %     \begin{column}{0.7\textwidth}
-    %         Machines
-    %         \begin{itemize}
-    %             \item Processing : does a predefined list of process for packages
-    %             \item Input: generate packages
-    %             \item Output: gather fully processed packages
-    %         \end{itemize}
-    %     \end{column}
-    % \end{columns}
-
-    % ~
-
-    % \begin{columns}
-    %     \begin{column}{0.2\textwidth}
-            
-    %     \end{column}
-    %     \begin{column}{0.7\textwidth}
-    %         Robots : manipulate packages
-    %         \begin{itemize}
-    %             \item commands: move, pick, place,\dots
-    %             \item recharge at recharge areas
-    %         \end{itemize}
-    %     \end{column}
-    % \end{columns}
 \end{frame}
 
 % \begin{frame}{Other logistic simulators}
@@ -127,8 +117,11 @@
 % \end{frame}
 
 \begin{frame}{Mission of the robotic agent}
-    \centering
-Mission : Do all the processes of packages, and for each process of a package:
+Process all packages entering the environment.
+
+~~
+
+Choices of the robotic agent: for each process of a package
 \begin{itemize}
     \pause
     \item Select a machine to do the process.
@@ -138,93 +131,115 @@ Mission : Do all the processes of packages, and for each process of a package:
 
 \end{frame}
 
-\subsection{Programming a robotic agent}
 
-\begin{frame}{Programming the robotic agent in a hierarchical fashion}
-    Define its behavior:
+\subsection{Deliberate acting}
+
+\begin{frame}{Defining the robotic agent capabilities and programming}
+
+    Define its behavior such that it is:
     \begin{itemize}
         \pause
-        \item able to act in different contexts,
+        \item Able to act in different contexts
         \pause
-        \item robust to hazards and errors,
+        \item Robust to hazards and errors
         \pause
-        \item reactive.
+        \item Reactive
     \end{itemize}
-    
-    ~~
-    
-    Hierarchical representation of the agent skills.
-    \begin{itemize}
-        \pause
-        \item Set of low-level capabilities: \textit{move, pick, place}
-        \pause
-        \item Set of high-level capabilities: \textit{process package}
-        \pause
-        \item Skills $\equiv$ different ways of achieving high-level capabilities
-        \begin{itemize}
-            \item operational model (executable)
-            \item composition of lower-level capabilities
-        \end{itemize}
-        %\item Several levels of abstraction $\rightarrow$ ease deliberation.
-    \end{itemize}
+   
 \end{frame}
 
-\begin{frame}{Acting domain}
-    \begin{columns}[T]
-        \begin{column}{0.55\textwidth}
-            Acting domain \textbf{$A_\Delta (A, T, M_t)$}
-            \small
-            \pause
-            \begin{itemize}
-             \item[$A$] : commands (low-level capabilities)
-             \pause
-             \item[$T$] : tasks (high-level capabilities)
-             \pause
-             \item[$M_t$] : methods (skills):
-             \begin{itemize}
-                \item pre-conditions
-                \item body (executable program)
-             \end{itemize}
-             
-         \end{itemize}
-        \end{column}
+\begin{frame}{Represent the agent capabilities in a hierarchical fashion}
+Advantages of the hierarchical description : 
+    \begin{itemize}
         \pause
-        \begin{column}{0.45\textwidth}
-            \begin{tikzpicture}
-                \node[draw, ellipse, ultra thick] (t) {\textit{take}} [sibling distance = 3.5cm]
-                    child {node[draw, ultra thick] (m1) {$m_1$} edge from parent [dashed]
-                    child {node[draw,rounded corners, ultra thick, solid] (a1) {$pick$} edge from parent
-                    }} 
-                    child {node[draw, ultra thick] (m2) {$m_2$} edge from parent [dashed] [sibling distance = 1.5cm]
-                    child {node[draw, ellipse, ultra thick, solid] (a2) {$move$} edge from parent [solid]}
-                    child {node[draw, rounded corners, solid, ultra thick] {$pick$} edge from parent [solid]}};
-                \node[right = 0em of t] {$\in T$};
-                \node[right = 0em of m1] {$\in M_t$};
-                \node[right = 0em of m2] {$\in M_t$};
-                \node[right = 0em of a1] {$\in A$};
+        \item Can be easier to program
+        \pause
+        \item Can be easier to deliberate
+    \end{itemize}
+\centering
+    Acting domain \textbf{$A_\Delta (A, T, M_t)$} : hierarchical operational models
+    \small
+    \pause
+    \begin{itemize}
+        \item[$A$] : commands (low-level capabilities)
+        \pause
+        \item[$T$] : tasks (high-level capabilities)
+        \pause
+        \item[$M_t$] : methods (skills):
+        \begin{itemize}
+            \item pre-conditions
+            \item body (executable program)
+        \end{itemize}
+    \end{itemize}
+
+    % Hierarchical representation of the agent skills.
+    % \begin{itemize}
+    %     \pause
+    %     \item Set of low-level capabilities: \textit{move, pick, place}
+    %     \pause
+    %     \item Set of high-level capabilities: \textit{process package}
+    %     \pause
+    %     \item Skills $\equiv$ different ways of achieving high-level capabilities
+    %     \begin{itemize}
+    %         \item operational model (executable)
+    %         \item composition of lower-level capabilities
+    %     \end{itemize}
+    %     %\item Several levels of abstraction $\rightarrow$ ease deliberation.
+    % \end{itemize}
     
-            \end{tikzpicture}
-    
+\end{frame}
+
+
+
+\begin{frame}{Example of task}
+   \centering
+    \begin{tikzpicture}
+        \node[draw, ellipse, ultra thick] (t) {\textit{take}} [sibling distance = 3.5cm]
+            child {node[draw, ultra thick] (m1) {$m_1$} edge from parent [dashed]
+            child {node[draw,rounded corners, ultra thick, solid] (a1) {$pick$} edge from parent
+            }} 
+            child {node[draw, ultra thick] (m2) {$m_2$} edge from parent [dashed] [sibling distance = 1.5cm]
+            child {node[draw, ellipse, ultra thick, solid] (a2) {$move$} edge from parent [solid]}
+            child {node[draw, rounded corners, solid, ultra thick] {$pick$} edge from parent [solid]}};
+        \node[right = 0em of t] {$\in T$};
+        \node[right = 0em of m1] {$\in M_t$};
+        \node[right = 0em of m2] {$\in M_t$};
+        \node[right = 0em of a1] {$\in A$};
+
+    \end{tikzpicture}
+\end{frame}
+
+\begin{frame}[fragile]{Refinement Acting Engine (RAE)\footnotemark[1]: acting with hierarchical operational models}
+
+    \footnotetext[1]{Automated Planning and Acting\cite{ghallabAutomatedPlanningActing2016}}
+
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{figure}
+                \includegraphics[width = \textwidth]{images/rae_architecture.png}
+                \caption{A simple architecture for a refinement acting engine.\footnotemark[1]}
+            \end{figure}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            Role:
+            \begin{itemize}
+                \pause
+                \item Execute tasks received by the system
+                \pause
+                \item Refine tasks into instantiated method
+              
+              \centering
+              \begin{tikzpicture}
+                  \node[] (task) {$\tau(p_1,\dots,p_n)$};
+                  \node[below = 2em of task] (method) {$m(p_1,\dots,p_n, \dots, p_m)$};
+                  \path[->] (task) edge node[right, midway] {refinement} (method);
+              \end{tikzpicture}
+                \item Monitor operational model execution
+                  \pause
+                \item Monitor commands requests
+            \end{itemize}
         \end{column}
     \end{columns}
-\end{frame}
-
-\begin{frame}{Refinement Acting Engine (RAE): deliberation algorithms using hierarchical operational models}
-    Features of the system:
-    \begin{itemize}
-        \pause
-        \item Monitor task and command execution
-        \pause
-        \item Perform multiple tasks in parallel
-          \pause
-          \item \textbf{Automated} refinement of task into method and parameters choice 
-      \end{itemize}
-      \centering
-      \begin{tikzpicture}
-          \node[] (task) {$\tau(p_1,\dots,p_n)$};
-          \node[below = 2em of task] (method) {$m(p_1,\dots,p_n, \dots, p_m)$};
-          \path[->] (task) edge node[right, midway] {refinement} (method);
-      \end{tikzpicture}
 \end{frame}
 
 \begin{frame}{RAE functioning}
@@ -237,7 +252,7 @@ Mission : Do all the processes of packages, and for each process of a package:
             \begin{itemize}
                 \setlength{\leftmargini}{-1pt}
                 \onslide<2->
-                \item \textbf{Main:} 
+                \item \textbf{Main(loop):} 
                 \begin{itemize}
                     \item Receive $\tau$ (task or event);
                     
@@ -245,7 +260,7 @@ Mission : Do all the processes of packages, and for each process of a package:
                     \onslide<3->
                     \item Refine $\tau$: \textbf{Select} an applicable method $m$ for $\tau$
                     \onslide<4->
-                    \item \textbf{Progress} $m$
+                    \item \textbf{Progress} all tasks in the agenda
                 \end{itemize}
                 \onslide<5->
                 \item \textbf{Progress:}
@@ -337,7 +352,7 @@ Mission : Do all the processes of packages, and for each process of a package:
 
 
 
-\begin{frame}[fragile]{Simple scenario: one package}
+\begin{frame}[fragile]{Factory Simulator: model for one package}
     \centering
     \begin{columns}
         \begin{column}{0.5\textwidth}
@@ -417,9 +432,9 @@ Mission : Do all the processes of packages, and for each process of a package:
     Video example: \href{https://youtu.be/Copcg6A6Cvo}{https://youtu.be/Copcg6A6Cvo}
 \end{frame}
 
-\subsection{Multi-agent problematics}
+\subsection{Multi-agent deliberation}
 
-\begin{frame}{Several packages?}
+\begin{frame}{What about several packages?}
     \begin{columns}
         \begin{column}{0.5\textwidth}
             \centering
@@ -437,37 +452,48 @@ Mission : Do all the processes of packages, and for each process of a package:
     
     ~
 \pause
-    New missions for the robotic agent:
+
+    New \textbf{missions} for the robotic agent:
     \begin{itemize}
         \pause
-        \item Schedule package passage on machines
+        \item \textbf{Schedule} package passage on machines
         \pause
-        \item Allocate package displacement tasks to robots
+        \item \textbf{Allocate} package displacement tasks to robots
         %\item Monitor the robots' batteries 
     \end{itemize}
 
     \centering
 \end{frame}
 
-\begin{frame}{Multi-agent refinement-based deliberation}
-    RAE shortcomings:
+\begin{frame}{Extension of RAE to improve deliberation in multi-agent scenarios}
+    Shortcomings to the first definition of RAE:
+    {\small
     \begin{itemize}
         \pause
-        \item Progression of tasks rely on Round Robin \pause$\rightarrow$ difficulty to interleave tasks using the same resources.
+        \item \textbf{Progression} of tasks rely on \textbf{Round Robin} \pause$\rightarrow$ \textbf{difficult} to \textbf{interleave tasks} using the same resources.
         \pause
         \item Methods limited to a sequence of actions
         %\item Difficulties to integrate sound planning from operational models due to implementation in Python.
-    \end{itemize}
+    \end{itemize}}
 
+    ~~
+
+    \pause
+    Limits of previous RAE implementation:
+    {\small
+    \begin{itemize}
+        \item Operational model in Python
+        \item Ad-hoc mechanism for concurrency and mutexes
+    \end{itemize}}
     ~~
     
 \pause
-    Solution: adapt RAE for multi-agents to
+    Proposition: extend RAE to
+    {\small
     \begin{itemize}
         \pause
         \item Deal natively with concurrency to improve the interleaving of tasks
         \pause
         \item Reason on resource allocation strategies to optimize the overall process
-    \end{itemize}
-
+    \end{itemize}}
 \end{frame}

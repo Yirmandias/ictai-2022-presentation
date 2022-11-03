@@ -1,4 +1,4 @@
-\documentclass[c,english]{beamer}
+\documentclass[english]{beamer}
 \usetheme{Frankfurt}
 \usepackage[utf8]{inputenc}
 \usepackage{natbib}
@@ -33,7 +33,7 @@
 \setbeamertemplate{footline}[frame number]
 
 
-\title{IEEE ICTAI 2022}
+\title{RIS Seminar}
 \subtitle{Extending a Refinement Acting Engine for Fleet Management: Concurrency and Resources}
 \author{\textbf{Jérémy Turi}, Arthur Bit-Monnot \\
 jeremy.turi@laas.fr, abitmonnot@laas.fr}
@@ -46,40 +46,9 @@ jeremy.turi@laas.fr, abitmonnot@laas.fr}
 \titlepage
 \end{frame}
 
+\include{sections/foreword.tex}
 
 
-\begin{frame}[t]{The Robotics and Interactions (RIS) team}
-  \centering
-      \includegraphics[width=0.7\textwidth]{images/RIS-robot-banner.jpg}
-  \pause
-  \begin{columns}[t]
-    \begin{column}{0.5\textwidth}
-      Robotics study fields :
-      \footnotesize
-      \begin{itemize}
-          \item Control and Physical Interactions
-          \item {\color<4>{blue}\textbf<4>{Deliberation architectures}}
-          \item {\color<4>{blue}\textbf<4>{Symbolic planning (hierarchical, temporal)}}
-          \item Geometric and Motion Planning
-          \item Learning behaviors and plans
-      \end{itemize}
-    \end{column}
-    \pause
-    \begin{column}{0.5\textwidth}
-      Applications:
-      \footnotesize
-      \begin{itemize}
-        \item Field and Aerial Robotics {\color<4>{blue}\textbf<4>{(multi-robot cooperation)}}
-        \item Cognitive and Interactive Robotics
-        \item Molecular Motion Algorithms
-      \end{itemize}
-    \end{column}
-  \end{columns}
-
-  %~~
-  
-  %My PhD: Planning from operational models for deliberate acting in robotics.
-\end{frame}
 
 \begin{frame}
 \frametitle{Outline}
