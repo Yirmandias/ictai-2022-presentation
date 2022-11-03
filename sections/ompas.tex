@@ -4,7 +4,7 @@
 \begin{frame}{The Operational Model Planning and Acting System (OMPAS), an extension to RAE}
     \begin{columns}[t]
         \begin{column}{0.5\textwidth}
-    New task in separated thread
+    New \textbf{task} in \textbf{dedicated thread}
     \begin{figure}
         \tikzstyle{thread} = [draw, rounded corners, rectangle, fill=black!50]
     \begin{tikzpicture}[scale=0.5, every node/.style={scale=0.5}]
@@ -132,10 +132,10 @@
         \begin{column}{0.5\textwidth}
         Operational language with
         \begin{itemize}
-            \item Acting features
-            \item Generic programming constructs
+            \item \textbf{Acting} features
+            \item \textbf{Generic} programming constructs
             \item First-hand concurrency support (interruption, resource)
-            \item Simple semantic $\rightarrow$ guide the acting choices with automated analysis of skills
+            \item \textbf{Simple semantic} $\rightarrow$ \textbf{guide} the \textbf{acting choices} with \textbf{automated analysis} of \textbf{skills}
         \end{itemize}
         \end{column}
     \end{columns}
@@ -145,7 +145,7 @@
 
 \begin{frame}[fragile]{SOMPAS: A Lisp variant based on Scheme}
     \centering
-    Scheme : Recursive evaluation of expressions \verb|(f e1 ... en)|
+    Scheme : Recursive evaluation of \textbf{expressions} \verb|(f e1 ... en)|
     
     ~~
 
@@ -154,17 +154,17 @@
         \begin{column}{0.65\textwidth}
             Definitions:
             \begin{itemize}
-                \item Expression = \{Atom, Expression List\}
-                \item Atom = \{Symbol, Boolean, Number, Procedure\}
+                \item \textbf{Expression} = \{Atom, List of expression\}
+                \item \textbf{Atom} = \{Symbol, Boolean, Number, Procedure\}
             \end{itemize}
 \pause
         \end{column}
         \begin{column}{0.35\textwidth}
-            Scheme advantages:
+            Scheme \textbf{advantages}:
             \begin{itemize}
                 \item Few primitives
                 \item Functional
-                \item Simple to extend
+                \item \textbf{Simple to extend}
             \end{itemize}
         \end{column}
      \end{columns}
