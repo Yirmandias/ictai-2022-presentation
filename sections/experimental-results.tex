@@ -1,37 +1,87 @@
-\section{Results for a logistic simulator}
+\section{Model example for a factory simulator}
 
-\begin{frame}[fragile]{Validation on Job shop problems}
+\begin{frame}[fragile]{Multi-agent model}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \centering
+            \includegraphics[width = 0.3\textwidth]{images/godot/package.png}
+            
+            \Large $\times n$
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \centering
+            \includegraphics[width = 0.3\textwidth]{images/godot/robot_texture.png}
+            
+            \LARGE $\times m$
+        \end{column}
+    \end{columns}
+\pause
+~~
+\centering
+        Modelled with a unique high-level task:
+        \setlength{\leftmargini}{0pt}
+        \lstset{columns=fullflexible}
+        \small
+    \begin{lstlisting}[language = lisp]
+(do
+    ;declare robots and machines as resources
+    (mapf new-resource (instances robot))
+    (mapf new-resource (instances machine))
+    ;process all packages
+    (define h1 (async (t_process_packages)))
+    ;monitor in parallel batteries of robots
+    (define h2 (async (t_check_rob_bat)))
+    (await h1)) ;await that all packages are processed
+    \end{lstlisting}    
+\end{frame}
+
+\begin{frame}{Running example for several packages}
+    \centering
+
+    \includegraphics[width = 0.8\textwidth]{images/gobot-multi-robot.png}
+    \Large
+
+    Video example: \href{https://youtu.be/8z2aUsWTq4k}{https://youtu.be/8z2aUsWTq4k}
+\end{frame}
+
+
+% Presentation des problématiques traités,
+% Expressivité des modèles => 
+% Greedy => facilement faisable avec d'autres implémentations de RAE
+% Advanced => plus compliqué à faire avec les autres implémentations de Python => 
+% Ici pas de garantie de "no race condition" à l'accès d'une ressource
+\begin{frame}[fragile]{Validation on job shop problems}
 %\centering
 %Outline the features of the new system and the language
-$n\times m$ job shop definition:
+%Organiser le passage de plusieurs tâches sur des machines.
+%transport des paquets entre les machines
+Job shop : $n$ packages should be processed on $m$ machines
+
+Robotic system mission:
 \begin{itemize}
     \pause
-    \item $n$ jobs processed on $m$ machines on a predefined times and order.
+    \item Schedule packages passages on machines to optimize the total processing time.
     \pause
-    \item each machine can process only one package at a time.
+    \item Take into account robot displacement times. 
 \end{itemize}
 
-~~
-
-% Restriction of the simulation:
-% \begin{itemize}
-%     \item All packages are created at the beginning
-%     \item Each machine can do a unique process
-% \end{itemize}
-
-% ~~
-
-\pause
-Comparison of allocations strategies:
-\begin{itemize}
-    \pause
-    \item Greedy : random robot
-    \pause
-    \item Advanced : first available robot
-    \pause
-    \item ALRPTF : advanced with priority to package with Longest Remaining Processing Time
-\end{itemize}
 \end{frame}
+
+
+\begin{frame}{Definition of several reactive behaviors for the robotic agent}
+    Several resource allocation strategies: 
+    \begin{itemize}
+        \pause
+        \item Greedy: acquire random robot
+        \pause
+        \item Advanced: acquire first available robot
+        \pause
+        \item ALRPTF: Advanced+prority to package with \textit{Longest Remaining Processing Time}
+    \end{itemize}
+\end{frame}
+
+
+
 
 \newcommand{\calcrowmean}{
     \def \rowmean{0}
@@ -95,7 +145,7 @@ Comparison of allocations strategies:
 
 
 
-\begin{frame}[fragile]{Strategies comparison}
+\begin{frame}[fragile]{Comparison of reactive strategies on job shop problems}
 
     \begin{tikzpicture}
         \begin{axis}[
@@ -174,7 +224,9 @@ Comparison of allocations strategies:
                     ALRPTF}
     \end{axis}
     \end{tikzpicture}
-        %\caption{Comparison of the mean time to execute 4 6x6 job-shop problems with three different allocation strategies. Each pair problem-strategy has been executed 10 times.
-        %Timescale of the simulator is set to 4.}
+    
+    \pause
+
+    Future work: improve the system with \textbf{anticipation} capabilities \textbf{(planning)}
   
 \end{frame}

@@ -1,5 +1,5 @@
 \section{Introduction}
-\subsection{Deliberation for logistic}
+\subsection{Robots in factories}
 
 
 \begin{frame}{Industry 4.0: Logistic enhanced by robotics}
@@ -28,10 +28,10 @@
 \end{columns}
 \end{frame}
 
-\begin{frame}{GobotSim, a new factory simulator with an emphasis on deliberation}
+\begin{frame}{Running example : factory simulator with an emphasis on deliberation}
     \begin{columns}
         \begin{column}{0.5\textwidth}
-            GobotSim, a 2D factory simulator to study scheduling and resource allocation strategies.
+            2D factory simulator to study scheduling and resource allocation strategies.
         \end{column}
         \begin{column}{0.4\textwidth}
             \includegraphics[width=\linewidth]{images/gobot-rae.png}
@@ -135,83 +135,96 @@ Mission : Do all the processes of packages, and for each process of a package:
     \pause
     \item Select a robot to carry it to the machine.
 \end{itemize}
-% ~
 
-%     Role of the autonomous agent:
-%     \begin{itemize}
-%         \item Control individual AMR.
-%         \item Deal with contingencies and errors,
-%         \item Optimize choices in function of time and energy.
-%     \end{itemize}
 \end{frame}
-\subsection{Programming the autonomous agent}
 
-\begin{frame}{Programming the autonomous agent}
+\subsection{Programming a robotic agent}
+
+\begin{frame}{Programming the robotic agent in a hierarchical fashion}
+    Define its behavior:
+    \begin{itemize}
+        \pause
+        \item able to act in different contexts,
+        \pause
+        \item robust to hazards and errors,
+        \pause
+        \item reactive.
+    \end{itemize}
+    
+    ~~
+    
     Hierarchical representation of the agent skills.
     \begin{itemize}
         \pause
-        \item Different methods/goal $\rightarrow$ adapt to the context
+        \item Set of low-level capabilities: \textit{move, pick, place}
         \pause
-        \item Several levels of abstraction $\rightarrow$ ease deliberation.
+        \item Set of high-level capabilities: \textit{process package}
+        \pause
+        \item Skills $\equiv$ different ways of achieving high-level capabilities
+        \begin{itemize}
+            \item operational model (executable)
+            \item composition of lower-level capabilities
+        \end{itemize}
+        %\item Several levels of abstraction $\rightarrow$ ease deliberation.
     \end{itemize}
-   
 \end{frame}
 
-\begin{frame}{Refinement Acting Engine: deliberation with hierarchical skills}
+\begin{frame}{Acting domain}
+    \begin{columns}[T]
+        \begin{column}{0.55\textwidth}
+            Acting domain \textbf{$A_\Delta (A, T, M_t)$}
+            \small
+            \pause
+            \begin{itemize}
+             \item[$A$] : commands (low-level capabilities)
+             \pause
+             \item[$T$] : tasks (high-level capabilities)
+             \pause
+             \item[$M_t$] : methods (skills):
+             \begin{itemize}
+                \item pre-conditions
+                \item body (executable program)
+             \end{itemize}
+             
+         \end{itemize}
+        \end{column}
+        \pause
+        \begin{column}{0.45\textwidth}
+            \begin{tikzpicture}
+                \node[draw, ellipse, ultra thick] (t) {\textit{take}} [sibling distance = 3.5cm]
+                    child {node[draw, ultra thick] (m1) {$m_1$} edge from parent [dashed]
+                    child {node[draw,rounded corners, ultra thick, solid] (a1) {$pick$} edge from parent
+                    }} 
+                    child {node[draw, ultra thick] (m2) {$m_2$} edge from parent [dashed] [sibling distance = 1.5cm]
+                    child {node[draw, ellipse, ultra thick, solid] (a2) {$move$} edge from parent [solid]}
+                    child {node[draw, rounded corners, solid, ultra thick] {$pick$} edge from parent [solid]}};
+                \node[right = 0em of t] {$\in T$};
+                \node[right = 0em of m1] {$\in M_t$};
+                \node[right = 0em of m2] {$\in M_t$};
+                \node[right = 0em of a1] {$\in A$};
+    
+            \end{tikzpicture}
+    
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Refinement Acting Engine (RAE): deliberation algorithms using hierarchical operational models}
     Features of the system:
     \begin{itemize}
         \pause
-        \item Monitor procedure and command execution
+        \item Monitor task and command execution
         \pause
-        \item Support parallel execution.
-        \pause
-        \item Refinement at runtime for more reactive systems.
-        \begin{tikzpicture}
-            \node[] (task) {$\tau(p_1,\dots,p_n)$};
-            \node[below = 2em of task] (method) {$m(p_1,\dots,p_n, \dots, p_m)$};
-            \path[->] (task) edge node[right, midway] {refinement} (method);
-        \end{tikzpicture}
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{Hierarchical formalism}
-
-\begin{columns}[T]
-    \begin{column}{0.55\textwidth}
-        Acting domain \textbf{$A_\Delta (A, T, M_t)$}
-        \small
-        \pause
-        \begin{itemize}
-        
-        
-         \item[$A$] : commands (low-level) move, grasp
-         \pause
-         \item[$T$] : tasks (high-level)
-         \pause
-         \item[$M_t$] : methods: pre-conditions, body (operational model)
-         
-     \end{itemize}
-    \end{column}
-    \pause
-    \begin{column}{0.45\textwidth}
-        \begin{tikzpicture}
-            \node[draw, ellipse, ultra thick] (t) {\textit{take}} [sibling distance = 3.5cm]
-                child {node[draw, ultra thick] (m1) {$m_1$} edge from parent [dashed]
-                child {node[draw,rounded corners, ultra thick, solid] (a1) {$pick$} edge from parent
-                }} 
-                child {node[draw, ultra thick] (m2) {$m_2$} edge from parent [dashed] [sibling distance = 1.5cm]
-                child {node[draw, ellipse, ultra thick, solid] (a2) {$move$} edge from parent [solid]}
-                child {node[draw, rounded corners, solid, ultra thick] {$pick$} edge from parent [solid]}};
-            \node[right = 0em of t] {$\in T$};
-            \node[right = 0em of m1] {$\in M_t$};
-            \node[right = 0em of m2] {$\in M_t$};
-            \node[right = 0em of a1] {$\in A$};
-
-        \end{tikzpicture}
-
-    \end{column}
-\end{columns}
-    
+        \item Perform multiple tasks in parallel
+          \pause
+          \item \textbf{Automated} refinement of task into method and parameters choice 
+      \end{itemize}
+      \centering
+      \begin{tikzpicture}
+          \node[] (task) {$\tau(p_1,\dots,p_n)$};
+          \node[below = 2em of task] (method) {$m(p_1,\dots,p_n, \dots, p_m)$};
+          \path[->] (task) edge node[right, midway] {refinement} (method);
+      \end{tikzpicture}
 \end{frame}
 
 \begin{frame}{RAE functioning}
@@ -342,13 +355,13 @@ Mission : Do all the processes of packages, and for each process of a package:
     \end{columns}
     \pause
     \centering
+
+    ~~
+
     Unique task \textit{process(?p)}
 
     Methods:
     
-    ~~
-
-
     \footnotesize
     \begin{columns}[t]
         \begin{column}{0.32\textwidth}
@@ -396,12 +409,15 @@ Mission : Do all the processes of packages, and for each process of a package:
 \end{frame}
 
 \begin{frame}{Running example with one package}
-    \LARGE
     \centering
-    \href{https://youtu.be/a4_tITUTQuQ}{Video example}
+
+    \includegraphics[width = 0.8\textwidth]{images/gobot-single-robot.png}
+    
+    \Large
+    Video example: \href{https://youtu.be/Copcg6A6Cvo}{https://youtu.be/Copcg6A6Cvo}
 \end{frame}
 
-\subsection{Multi-agent scenario}
+\subsection{Multi-agent problematics}
 
 \begin{frame}{Several packages?}
     \begin{columns}
@@ -421,7 +437,7 @@ Mission : Do all the processes of packages, and for each process of a package:
     
     ~
 \pause
-    New problematics for the robotic system:
+    New missions for the robotic agent:
     \begin{itemize}
         \pause
         \item Schedule package passage on machines
@@ -449,7 +465,7 @@ Mission : Do all the processes of packages, and for each process of a package:
     Solution: adapt RAE for multi-agents to
     \begin{itemize}
         \pause
-        \item Deal natively with with concurrency to improve the interleaving of tasks
+        \item Deal natively with concurrency to improve the interleaving of tasks
         \pause
         \item Reason on resource allocation strategies to optimize the overall process
     \end{itemize}

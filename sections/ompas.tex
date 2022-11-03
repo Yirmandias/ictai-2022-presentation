@@ -1,5 +1,5 @@
 \section{RAE for multi-agent systems}
-\subsection{OMPAS: Extending RAE for fleet management}
+\subsection{Operational Model Planning and Acting System}
 
 \begin{frame}{The Operational Model Planning and Acting System (OMPAS), an extension to RAE}
     \begin{columns}[t]
@@ -167,15 +167,15 @@
 
 \pause
     \begin{columns}[t]
-        \begin{column}{0.6\textwidth}
+        \begin{column}{0.65\textwidth}
             Definitions:
             \begin{itemize}
-                \item Expression = \{Atom, List\}
+                \item Expression = \{Atom, Expression List\}
                 \item Atom = \{Symbol, Boolean, Number, Procedure\}
             \end{itemize}
 \pause
         \end{column}
-        \begin{column}{0.4\textwidth}
+        \begin{column}{0.35\textwidth}
             Scheme advantages:
             \begin{itemize}
                 \item Few primitives
@@ -197,9 +197,9 @@
         \begin{column}{0.6\textwidth}
             Functions:
             \begin{itemize}
-                \item \textit{(async e)}: creates a new thread to evaluate e, returns a handle
-                \item \textit{(await h)}: awaits the result of the concurrent evaluation.
-                \item \textit{(interrupt h)}: interrupts the concurrent evaluation.
+                \item \textbf{\textit{(async e)}}: creates a new thread to evaluate e, returns a handle
+                \item \textbf{\textit{(await h)}}: awaits the result of the concurrent evaluation.
+                \item \textbf{\textit{(interrupt h)}}: interrupts the concurrent evaluation.
             \end{itemize}
         \end{column}
         \pause
@@ -207,7 +207,7 @@
         Example: 
 \small
 \lstset{columns=fullflexible}
-            \begin{lstlisting}
+            \begin{lstlisting}[language = lisp]
 (begin
     (define h1 (async (+ 1 2)))
     (define h2 (async (* 3 3)))
@@ -296,13 +296,13 @@
         Functions:
         \begin{itemize}
             \pause
-                \item \textit{(exec a $p_1...p_n$)} executes and monitors a task or command.
+                \item \textbf{\textit{(exec a $p_1...p_n$)}} executes and monitors a task or command.
                 % \begin{itemize}
                 %     \item command : resorts to the platform
                 %     \item task: selects a method and execute its operational model.
                 % \end{itemize}
             \pause
-                \item \textit{(read-state sf $p_1...p_n$)} returns the value of a state-variable
+                \item \textbf{\textit{(read-state sf $p_1...p_n$)}} returns the value of a state-variable
             % \pause
             %     \item \textit{(arbitrary set $\lambda$)} returns an arbitrary element from a $set$%. $\lambda$ can be used to select among the $set$.
             \end{itemize}
@@ -313,15 +313,15 @@
     Example:
 \small
     \lstset{columns=fullflexible}
-    \begin{lstlisting}
+    \begin{lstlisting}[language = lisp]
 (begin
-    (define loc-o (read-state loc o))
-    (define loc-t (read-state loc t))
-    (if (!= loc-o loc-t)
-        (exec drive t loc-o))
-    (exec load t o) 
-    (exec drive t l)
-    (exec unload t o))             
+    (define loc-p (read-state loc ?p))
+    (define loc-r (read-state loc ?r))
+    (if (!= loc-p loc-r)
+        (exec move ?r loc-p))
+    (exec pick ?r ?p) 
+    (exec move ?r ?l)
+    (exec place ?r ?p))             
     \end{lstlisting}
     \end{column}
 \end{columns}
@@ -332,15 +332,15 @@
     \begin{columns}
         \begin{column}{0.5\textwidth}
             \begin{itemize}
-                \item Object r with initial capacity $C(0) = C_{init} $
+                \item Object \textbf{r} with initial capacity $C(0) = C_{init} $
                 \item Acquire($r$,$c$) at time $t$ $\implies$ $c \leq C(t)$ 
             \end{itemize}
         \end{column}
         \pause
         \begin{column}{0.5\textwidth}
             \begin{itemize}
-                \item \emph{unary}: $C_{init} = 1, c = 1$;
-                \item \emph{divisible}: $C_{init} \in  \mathbb{R}_+^*, c \in ]0, C(t)]$
+                \item \textbf{\textit{unary}:} $C_{init} = 1, c = 1$;
+                \item \textbf{\textit{divisible}}: $C_{init} \in  \mathbb{R}_+^*, c \in ]0, C(t)]$
             \end{itemize}
         \end{column}
     \end{columns}
@@ -352,9 +352,9 @@
         \begin{column}{0.6\textwidth}
             Functions:
             \begin{itemize}
-                \item \textit{(new-resource r C)} : create a new resource $r$ with capacity $C$
-                \item \emph{(acquire r c)} : acquisition request for $r$ with amount $c$, returns a resource handle
-                \item \emph{(release h)} : release the resource using the resource handle
+                \item \textbf{\textit{(new-resource r C)}} : create a new resource $r$ with capacity $C$
+                \item \textbf{\textit{(acquire r c)}} : acquisition request for $r$ with amount $c$, returns a resource handle
+                \item \textbf{\textit{(release h)}} : release the resource using the resource handle
             \end{itemize}
         \end{column}
         \pause
@@ -362,7 +362,7 @@
         Example: 
             \small
             \lstset{columns=fullflexible}
-            \begin{lstlisting}
+            \begin{lstlisting}[language = lisp]
 (begin
  (new-resource r1)
  ...
@@ -373,49 +373,6 @@
             \end{lstlisting}
         \end{column}
     \end{columns}
-
-
-\end{frame}
-
-\begin{frame}[fragile]{Multi-agent model}
-    \begin{columns}
-        \begin{column}{0.5\textwidth}
-            \centering
-            \includegraphics[width = 0.3\textwidth]{images/godot/package.png}
-            
-            \Large $\times n$
-        \end{column}
-        \begin{column}{0.5\textwidth}
-            \centering
-            \includegraphics[width = 0.3\textwidth]{images/godot/robot_texture.png}
-            
-            \LARGE $\times m$
-        \end{column}
-    \end{columns}
-\pause
-~~
-\centering
-        Modelled with a unique high-level task:
-        \setlength{\leftmargini}{0pt}
-        \lstset{columns=fullflexible}
-        \small
-    \begin{lstlisting}[language = lisp]
-(do
-    ;declare robots and machines as resources
-    (mapf new-resource (instance robot))
-    (mapf new-resource (instance machine))
-    ;process all packages
-    (define h1 (async (t_process_packages)))
-    ;monitor in parallel batteries of robots
-    (define h2 (async (t_check_rob_bat)))
-    (await h1)) ;await that all packages are processed
-    \end{lstlisting}    
-\end{frame}
-
-\begin{frame}{Running example for multi-agent}
-    \centering
-    \LARGE
-    \href{https://youtu.be/KqBnKKIjug4}{Video example}
 \end{frame}
 
 % \begin{frame}{More advanced features and programming constructs}
@@ -489,3 +446,4 @@
 
 %     \end{columns}
 % \end{frame}
+
